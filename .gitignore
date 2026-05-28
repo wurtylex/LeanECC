@@ -1,0 +1,10 @@
+.lake/
+lakefile.olean
+lakefile.olean.lock
+
+.vscode/
+.idea/
+
+# some os stuff
+.DS_Store
+Thumbs.db
