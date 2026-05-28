@@ -1,4 +1,4 @@
-name: update dependencies
+name: Update Dependencies
 
 on:
   schedule:
@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: leanprover-community/lean-update@main
         with:
           on_update_succeeds: pr
