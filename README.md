@@ -1,5 +1,5 @@
 # ECC
-A Lean 4 project depending on [mathlib](https://github.com/leanprover-community/mathlib4) and [cslib](https://github.com/leanprover/cslib).
+A Lean 4 project depending on [cslib](https://github.com/leanprover/cslib) and [mathlib](https://github.com/leanprover-community/mathlib4) (transitively).
 
 Goal is to formalize Error Correction Codes in Lean.
 
