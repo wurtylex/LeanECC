@@ -64,3 +64,13 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
 
 end Code
+
+namespace Function
+
+/-- Equivalent description of a code, I assume that the Code has to be the same size though -/
+structure EncodingFunction (C : Code α n) where
+  toFun : Fin (Set.ncard C) → (Fin n → α)
+  range : Set.range toFun = C
+  injective : Function.Injective toFun
+
+end Function
