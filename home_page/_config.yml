@@ -22,7 +22,7 @@ title: ECC
 #email: your-email@example.com
 description: by Alex Chai and Anthony Chang and Erin Jaen and Henry Yuen
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://wurtylex.github.io/LeanECC" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://subdomain.wurtle.dev"
 twitter_username:
 github_username: wurtylex
 repository: wurtylex/LeanECC
