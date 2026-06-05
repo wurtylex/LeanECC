@@ -8,3 +8,6 @@ lakefile.olean.lock
 # some os stuff
 .DS_Store
 Thumbs.db
+
+# python
+.venv
