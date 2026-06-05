@@ -1,6 +1,7 @@
 name = "ECC"
 version = "0.1.0"
 defaultTargets = ["ECC"]
+lintDriver = "batteries/runLinter"
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
