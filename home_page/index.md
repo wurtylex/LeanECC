@@ -1,15 +1,73 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-# layout: home
+layout: default
 usemathjax: true
 ---
 
-Useful links:
+# Formalizing Error Correcting Codes in Lean 4
 
-* [Zulip chat for Lean](https://leanprover.zulipchat.com/) for coordination
-* [Blueprint]({{ site.url }}/blueprint/)
-* [Blueprint as pdf]({{ site.url }}/blueprint.pdf)
-* [Dependency graph]({{ site.url }}/blueprint/dep_graph_document.html)
-* [Doc pages for this repository]({{ site.url }}/docs/)
+**ECC** is an ongoing effort to formalize the theory of error correcting codes
+in the [Lean 4](https://lean-lang.org/) proof assistant, building on
+[Mathlib](https://github.com/leanprover-community/mathlib4) and
+[cslib](https://github.com/leanprover/cslib).
+
+The development is organized around a *blueprint* — a human-readable
+specification of the mathematics — whose statements are progressively replaced
+by fully checked Lean proofs. The dependency graph below tracks which results
+are formalized and which are still in progress.
+
+## Explore the project
+
+<ul class="link-grid">
+  <li>
+    <a href="{{ '/blueprint/' | relative_url }}">
+      <strong>Blueprint (web)</strong>
+      <span>The mathematical specification, cross-linked to the Lean code.</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{ '/blueprint.pdf' | relative_url }}">
+      <strong>Blueprint (PDF)</strong>
+      <span>A printable version of the full blueprint.</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{ '/blueprint/dep_graph_document.html' | relative_url }}">
+      <strong>Dependency graph</strong>
+      <span>Visualize formalization progress across all results.</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{ '/docs/' | relative_url }}">
+      <strong>API documentation</strong>
+      <span>Generated reference docs for every definition and theorem.</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://github.com/{{ site.repository }}">
+      <strong>Source on GitHub</strong>
+      <span>Browse the Lean sources, issues, and contribution guide.</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://leanprover.zulipchat.com/">
+      <strong>Lean Zulip</strong>
+      <span>Chat with the Lean community and coordinate work.</span>
+    </a>
+  </li>
+</ul>
+
+## Building locally
+
+You need [`elan`](https://github.com/leanprover/elan) (the Lean toolchain
+manager) installed. Then:
+
+```sh
+git clone https://github.com/{{ site.repository }}.git
+cd LeanECC
+lake exe cache get
+lake build
+```
+
+## Authors
+
+This project is developed by {{ site.author }}.

@@ -1,32 +1,18 @@
-# Welcome to Jekyll!
+# Site settings for the ECC home page.
 #
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-#
-# If you need help with YAML syntax, here are some quick references for you:
-# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
-# https://learnxinyminutes.com/docs/yaml/
-#
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
+# This page is intentionally self-contained: it does NOT use a remote Jekyll
+# theme. All styling lives in assets/css/style.scss and the layout in
+# _layouts/default.html, so the CSS always ships with the site and renders
+# correctly when served at the site root on a custom domain.
 
 title: ECC
-#email: your-email@example.com
-description: by Alex Chai and Anthony Chang and Erin Jaen and Henry Yuen
+description: A Lean 4 formalization of Error Correcting Codes
+author: Alex Chai, Anthony Chang, Erin Jaen, and Henry Yuen
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://ecc.wurtle.dev"
-twitter_username:
 github_username: wurtylex
 repository: wurtylex/LeanECC
 
 # Build settings
 plugins:
-  - jekyll-github-metadata
+  - jekyll-seo-tag
