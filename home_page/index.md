@@ -6,14 +6,7 @@ usemathjax: true
 # Formalizing Error Correcting Codes in Lean 4
 
 **ECC** is an ongoing effort to formalize the theory of error correcting codes
-in the [Lean 4](https://lean-lang.org/) proof assistant, building on
-[Mathlib](https://github.com/leanprover-community/mathlib4) and
-[cslib](https://github.com/leanprover/cslib).
-
-The development is organized around a *blueprint* — a human-readable
-specification of the mathematics — whose statements are progressively replaced
-by fully checked Lean proofs. The dependency graph below tracks which results
-are formalized and which are still in progress.
+in the [Lean 4](https://lean-lang.org/) proof assistant.
 
 ## Explore the project
 

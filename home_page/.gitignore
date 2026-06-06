@@ -1,0 +1,9 @@
+# Jekyll build output and local dev artifacts
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Gems installed locally via `bundle install --path vendor/bundle`
+.bundle/
+vendor/
