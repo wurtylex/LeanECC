@@ -11,6 +11,7 @@ public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 (Doc String that we happen to need fill this in later)
@@ -64,3 +65,5 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
 
 end Code
+
+end -- close @[expose] public section
