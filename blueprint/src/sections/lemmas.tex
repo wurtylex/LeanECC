@@ -3,31 +3,59 @@
 \begin{lemma}[subspace-imp-generator]
     \uses{def:subspace-def}
     \uses{def:generator-def}
-    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists G$ and $nxn$ matrix such that $C=\{fG | f\in \mathbb{F}^{n}_{q}\}$
+    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists G$ an $kxn$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$
 \end{lemma}
 
 \begin{proof}
-    Suppose we take $G$ to have rows that are just the transverses of the basis vectors of $C$.
     It would follow first of all, that $C$ must have basis vectors since it is a vector space.
-    It would further follow that as a vector subspace, it should have no more than $n$ basis vectors (the rest of the rows can be zero).
-    From there we could argue that multiplication by all possible $f\in \mathbb{F}^{n}_{q}$ represents all possible linear combinations of the basis vectors and thus the vector space defined by them, i.e. $C$
+    Suppose we take $G$ to have rows that are just the basis vectors of $C$.
+    It would further follow that by definition of dimension, there should be exactly $k$ such rows.
+    From there we could argue that multiplication by all possible $f\in \mathbb{F}^{k}_{q}$ represents all possible linear combinations of the basis vectors and thus the vector space defined by them, i.e. $C$
 \end{proof}
 
 \begin{lemma}[generator-imp-subspace]
     \uses{def:subspace-def}
     \uses{def:generator-def}
-    Let $G$ an $nxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{fG | f\in \mathbb{F}^{n}_{q}\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+    Let $G$ an $kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{lemma}
 
 \begin{proof}
     We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$
     We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
-        $\exists x,y\in \mathbb{F}^{n}_{q}$ such that $a=xG,b=yG$
-        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$ which should be in $C$ by definition
+        $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$
+        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$ which should be in $C$ since
+        $\mathbb{F}^{k}_{q}$ is closed under addition and thus $x+y\in \mathbb{F}^{k}_{q}$
     We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
-        $\exists x\in \mathbb{F}^{n}_{q}$ such that $a=xG$ ad that therefore for any $d\in \mathbb{F}_{q}$
-        $da=dxG$ and since $dx\in \mathbb{F}^{n}_{q}$ it must follow $da\in C$
+        $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$ ad that therefore for any $d\in \mathbb{F}_{q}$
+        $da=dxG$ and since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $da\in C$
     These three conditions should be sufficient to prove that $C$ is a valid vector space.
     It is also *tRivIallY* true that because $C$ remains expressed in terms of $\mathbb{F}_{q}$ that $C\subseteq \mathbb{F}^{n}_{q}$
     Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+\end{proof}
+
+\begin{lemma}[subspace-imp-parity-check]
+    \uses{def:subspace-def}
+    \uses{def:parity-check-def}
+    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists H$ an $nxn$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$
+\end{lemma}
+
+\begin{proof}
+    We should take the inverse of
+\end{proof}
+
+\begin{lemma}[parity-check-imp-subspace]
+    \uses{def:subspace-def}
+    \uses{def:parity-check-def}
+    Let $H$ an $nxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+\end{lemma}
+
+\begin{proof}
+    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
+    We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
+        $Ha^T=Hb^T=0$ and therefore by distributivity of matrix multiplication, $H(a+b)^t = Ha^T+Hb^T=0+0 = 0$ so $a+b\in C$
+    We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
+        $Ha^T=0$, then for arbitrary $d\in \mathbb{F}_{q}$, that $H(da)^T=dHa^T=0$ because we can commute scalars with matrices,
+        giving us that $da\in C$
+    These three conditions should be sufficient to prove that $C$ is a valid vector space.
+    It is also true that since $C$ is defined in terms of elements of $\mathbb{F}^{n}_{q}$ that it is trivially a subset of $\mathbb{F}^{n}_{q}$
 \end{proof}
