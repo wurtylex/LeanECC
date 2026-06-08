@@ -46,13 +46,13 @@
 \begin{lemma}[parity-check-imp-subspace]
     \uses{def:subspace-def}
     \uses{def:parity-check-def}
-    Let $H$ an $nxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+    Let $H$ an $n-kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^T=0\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{lemma}
 
 \begin{proof}
-    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
+    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$ trivially
     We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
-        $Ha^T=Hb^T=0$ and therefore by distributivity of matrix multiplication, $H(a+b)^t = Ha^T+Hb^T=0+0 = 0$ so $a+b\in C$
+        $Ha^T=Hb^T=0$ and therefore by distributivity of matrix multiplication and transposition, $H(a+b)^T = Ha^T+Hb^T=0+0 = 0$ so $a+b\in C$
     We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
         $Ha^T=0$, then for arbitrary $d\in \mathbb{F}_{q}$, that $H(da)^T=dHa^T=0$ because we can commute scalars with matrices,
         giving us that $da\in C$
