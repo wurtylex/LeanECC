@@ -1,0 +1,39 @@
+\section{Definitions}
+\begin{definition}[Code]
+\label{def:Code}
+\lean{Code}
+\leanok
+A code $C$ of block length $n$ over an alphabet $\alpha$ is a subset of $\alpha^{n}$.
+Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
+\end{definition}
+
+\begin{definition}[Alphabet Size]
+    \label{def:q}
+    \lean{Code.q}
+    \leanok
+    The alphabet size is $q := \lvert\alpha\rvert$, the cardinality of the finite alphabet $\alpha$.
+\end{definition}
+
+\begin{definition}[Dimension]
+    \label{def:dim}
+    \lean{Code.dim}
+    \leanok
+    \uses{def:Code, def:q}
+    The dimension $k$ of a code $C$ is
+    \[
+        k := \log_{q}(\lvert C\rvert),
+    \]
+    where $q$ is the alphabet size and $\lvert C\rvert$ is the number of codewords.
+\end{definition}
+ 
+\begin{definition}[Rate]
+    \label{def:rate}
+    \lean{Code.rate}
+    \leanok
+    \uses{def:Code, def:dim}
+    The rate $R$ of a code $C$ is
+    \[
+        R := \frac{k}{n}.
+    \]
+    where $k$ is the dimension and block length of $n$.
+\end{definition}

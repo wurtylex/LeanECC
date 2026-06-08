@@ -1,0 +1,28 @@
+\section{Properties}
+\begin{lemma}[Dimension is at most the block length]
+    \label{lem:dim_le_n}
+    \lean{Code.dim_le_n}
+    \leanok
+    \uses{def:dim}
+    For every code $C$ of block length $n$, we have $k \leq n$.
+\end{lemma}
+
+\begin{proof}
+    \leanok
+    \uses{def:q}
+    Note that $C \subseteq \alpha^{n}$, we have $\lvert C\rvert \le \lvert\alpha\rvert^{n} = q^{n}$, thus $k = \log_{q}\lvert C\rvert \le \log_{q} q^{n} = n$.
+\end{proof}
+ 
+\begin{lemma}[Rate is at most one]
+    \label{lem:rate_le_one}
+    \lean{Code.rate_le_one}
+    \leanok
+    \uses{def:rate}
+    For every code $C$, we have $R \leq 1$.
+\end{lemma}
+\begin{proof}
+    \leanok
+    \uses{lem:dim_le_n}
+    By Lemma~\ref{lem:dim_le_n}, $k \leq n$, and $n \ge 0$.
+    Therefore $R = k/n \leq 1$.
+\end{proof}

@@ -11,3 +11,7 @@ Thumbs.db
 
 # python
 .venv
+
+# blueprint
+blueprint/web/
+blueprint/lean_decls

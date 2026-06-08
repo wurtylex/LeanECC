@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780649581.31374 "print.tex" "print.pdf" "print" 1780649582.81468 0
+["pdflatex"] 1780904736.09564 "print.tex" "print.pdf" "print" 1780904737.61875 0
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1775415801 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1775415801 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1775415801 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -76,13 +76,15 @@
   "/usr/share/texmf-dist/tex/latex/url/url.sty" 1775415801 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1775415801 43569 fd570f2fa160877d211e859f687312ba ""
   "/var/lib/texmf/web2c/xetex/xelatex.fmt" 1780332713 4836375 5b6979ac7004fef711eb0c8052ff0468 ""
-  "content.tex" 1780649287.23824 416 9ee487fd375baca63694762a9e539869 ""
+  "content.tex" 1780901965.79821 532 d3276c671949ca4afdd3c579b9415787 ""
   "macros/common.tex" 1780646851.8688 820 60fafcc3aa944a5e60030581a943ef6b ""
   "macros/print.tex" 1780646851.8718 1101 87627b2ec24fef68edc71c13f43f7bab ""
-  "print.aux" 1780649582.53727 448 efaa8c016a8f50cb49184a1fe4da0223 "pdflatex"
-  "print.out" 1780649582.5384 215 5719cae1734d5a2deb6344024ac0c3cb "pdflatex"
+  "print.aux" 1780904737.35281 1283 8d46e803a4d1e7ebdccca68d49756ca0 "pdflatex"
+  "print.out" 1780904737.3538 552 f57254f16d1cf450accf15f348b1ee4a "pdflatex"
   "print.tex" 1780646851.8838 1150 321fe440a8744f865d2610ce509f7fc1 ""
-  "sections/definitions.tex" 1780649579.56523 373 2ded59680f62d6c69f1c96a7238a8900 ""
+  "sections/Basics/definitions.tex" 1780901905.93338 1015 350afc7d8eb6a4fd4b4c48d065088c4d ""
+  "sections/Basics/simple_properties.tex" 1780904735.77667 781 e49ee110f92c29ea0fbeefe110886c94 ""
+  "sections/LinearCodes/definitions.tex" 1780899630.45439 417 9dcc42f3ae17c94e2d82a46b099ec2a4 ""
   (generated)
   "print.aux"
   "print.log"
