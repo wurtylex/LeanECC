@@ -1,2 +1,6 @@
 $lualatex = 'lualatex %O %S';
 $pdf_mode = 4;
+# Only build the print version by default. Without this, a bare `latexmk`
+# (as run by the docgen action) also tries to compile content.tex and web.tex,
+# which are not standalone lualatex documents and fail the build.
+@default_files = ('print.tex');
