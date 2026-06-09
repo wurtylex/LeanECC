@@ -11,7 +11,6 @@ public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Mathlib.LinearAlgebra.Matrix.Rank
 
 /-!
 (Doc String that we happen to need fill this in later)
@@ -30,6 +29,12 @@ def Code : Type _ := Set (Fin n → α)
 namespace Code
 /-- The alphabet size. -/
 def q : ℕ := Fintype.card α
+
+/-- We view Code as a set of its codewords. -/
+def toSet (C : Code α n) : Set (Fin n → α) := C
+
+instance : Membership (Fin n → α) (Code α n) :=
+  ⟨fun C c => c ∈ C.toSet⟩
 
 /-- The dimension of the code C, is log_q(|C|) -/
 noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
