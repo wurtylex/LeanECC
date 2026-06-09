@@ -26,9 +26,6 @@ structure LinearCode (F : Type*) [Field F] [Fintype F] (n : ℕ)
 
 namespace LinearCode
 
-/-- To view a Linear Code as a code -/
-def toCode (C : LinearCode F n) : Code F n := (C.toSubmodule : Set (Fin n → F))
-
 instance : Membership (Fin n → F) (LinearCode F n) :=
   ⟨fun C c => c ∈ C.toSubmodule⟩
 
