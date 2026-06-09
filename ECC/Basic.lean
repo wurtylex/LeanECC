@@ -33,6 +33,7 @@ def q : ℕ := Fintype.card α
 /-- We view Code as a set of its codewords. -/
 def toSet (C : Code α n) : Set (Fin n → α) := C
 
+/-- Membership by unfolding to set -/
 instance : Membership (Fin n → α) (Code α n) :=
   ⟨fun C c => c ∈ C.toSet⟩
 

@@ -18,9 +18,8 @@ open Matrix
 
 variable {F : Type*} [Field F] [Fintype F] {n : ℕ}
 
-/- Note that this is proper definition
+/-- Note that this is proper definition
 finite field can only contain a number of elements equal to a prime power -/
-
 structure LinearCode (F : Type*) [Field F] [Fintype F] (n : ℕ)
   extends Submodule F (Fin n → F)
 
@@ -29,6 +28,7 @@ namespace LinearCode
 /-- To view a Linear Code as a code -/
 def toCode (C : LinearCode F n) : Code F n := (C.toSubmodule : Set (Fin n → F))
 
+/-- Membership by unfolding to submodule -/
 instance : Membership (Fin n → F) (LinearCode F n) :=
   ⟨fun C c => c ∈ C.toSubmodule⟩
 
