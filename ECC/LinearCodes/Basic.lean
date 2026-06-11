@@ -28,19 +28,26 @@ namespace LinearCode
 /-- To view a Linear Code as a code -/
 def toCode (C : LinearCode F n) : Code F n := (C.toSubmodule : Set (Fin n → F))
 
-/-- Membership by unfolding to submodule -/
-instance : Membership (Fin n → F) (LinearCode F n) :=
-  ⟨fun C c => c ∈ C.toSubmodule⟩
+/-- Coercion so we can treat Linear Code as a code (essentially applies toCode) -/
+instance : Coe (LinearCode F n) (Code F n) := ⟨toCode⟩
 
-/-- The linear code with generator matrix `G : F^{k×n}` is the image of the
-    row-multiplication linear map `v ↦ v ᵥ* G`.  A codeword is any `F`-linear
-    combination of the rows of `G`. -/
+/-- Simple proof that a linear code is a code -/
+@[simp] lemma mem_toCode {C : LinearCode F n} {c : Fin n → F} :
+    c ∈ C.toCode ↔ c ∈ C.toSubmodule := Iff.rfl
+
+/-- Inherit dim from code -/
+noncomputable def dim (C : LinearCode F n) : ℝ := C.toCode.dim
+
+/-- Inherit rate from code -/
+noncomputable def rate (C : LinearCode F n) : ℝ := C.toCode.rate
+
+/-- If C is an [n,k]_q linear code then there is a matrix G ∈ 𝔽^{k × n}_q
+of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q} -/
 def GeneratorMatrix {k : ℕ} (G : Matrix (Fin k) (Fin n) F) : LinearCode F n :=
   ⟨LinearMap.range (vecMulLinear G)⟩
 
-/-- The linear code with parity-check matrix `H : F^{m×n}` is the kernel of
-    the matrix-vector linear map `v ↦ H *ᵥ v`.  A codeword must satisfy
-    every parity-check equation imposed by the rows of `H`. -/
+/-- If C is an [n,k]_q linear code then there is a matrix H ∈ 𝔽^{(n-k) × n}_q
+of rank n-k satisfying C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} -/
 def ParityCheckMatrix {m : ℕ} (H : Matrix (Fin m) (Fin n) F) : LinearCode F n :=
   ⟨LinearMap.ker (mulVecLin H)⟩
 
