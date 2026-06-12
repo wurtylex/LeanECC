@@ -36,12 +36,19 @@
 \begin{lemma}[subspace-imp-parity-check]
     \uses{def:subspace-def}
     \uses{def:parity-check-def}
+    \uses{lemma:subspace-imp-generator}
     Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists H$ an $n-kxn$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$
 \end{lemma}
 
 \begin{proof}
-    Suppose we take the dual space of $C$, $C^*$, maybe using (https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/Dual/Basis.html)
-    We can then take the basis vectors of $C^*$ and create an $H$ with them as rows.
+    Suppose we can use subspace-imp-generator to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$
+    We can extend this further to say that because the rows of $G$ are linearly independent since they are basis vectors and their quantity is $k$
+    and they can be put into standard form $G=[I_k|P]$, (need to find if there's a good theorem to use)
+    Then suppose we take $H=[-P^T|I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;)
+    We can then see that $HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0$
+    From this we can get that since, by our defintion of $G$ that the aforementioned $x$ such that $c=xG$ can be used to show that
+    $c\in C, \iff \exists x, c=xG \iff Hc^T=H(xG)^T=HG^Tx^t=0x^t=0$, meaning that $c\in C \iff Hc^T = 0$
+
 \end{proof}
 
 \begin{lemma}[parity-check-imp-subspace]
