@@ -1,9 +1,13 @@
 \section{Lemmas}
 
 \begin{lemma}[subspace-imp-generator]
-    \uses{def:LC_subspace}
-    \uses{def:GeneratorMatrix}
-    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per LC_subspace, then $\exists G$ an $kxn$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$
+    \uses{def:LC_subspace,def:GeneratorMatrix}
+    \label{lemma:subspace-imp-generator}
+    Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a $k \times n$ matrix $G$ over $\mathbb{F}_q$ such that
+    \[
+        C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
+    \]
 \end{lemma}
 
 \begin{proof}
@@ -14,9 +18,10 @@
 \end{proof}
 
 \begin{lemma}[generator-imp-subspace]
-    \uses{def:LC_subspace}
-    \uses{def:GeneratorMatrix}
-    Let $G$ an $kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+    \uses{def:LC_subspace, def:GeneratorMatrix}
+    \label{lemma:generator-imp-subspace}
+    Let $G \in \mathbb{F}^{k \times n}_{q}$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
 \end{lemma}
 
 \begin{proof}
@@ -34,10 +39,13 @@
 \end{proof}
 
 \begin{lemma}[subspace-imp-parity-check]
-    \uses{def:LC_subspace}
-    \uses{def:ParityCheckMatrix}
-    \uses{lemma:subspace-imp-generator}
-    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per LC_subspace, then $\exists H$ an $n-kxn$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$
+    \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
+    \label{lemma:subspace-imp-parity-check}
+    Let $C$ be a linear code of dimension $k$ that is a subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ such that
+    \[
+        C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
+    \]
 \end{lemma}
 
 \begin{proof}
@@ -52,9 +60,10 @@
 \end{proof}
 
 \begin{lemma}[parity-check-imp-subspace]
-    \uses{def:LC_subspace}
-    \uses{def:ParityCheckMatrix}
-    Let $H$ an $n-kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^T=0\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+    \uses{def:LC_subspace, def:ParityCheckMatrix}
+    \label{lemma:parity-check-imp-subspace}
+    Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\top} = \mathbf{0}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
 \end{lemma}
 
 \begin{proof}
