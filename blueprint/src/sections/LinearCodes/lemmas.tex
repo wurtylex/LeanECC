@@ -11,10 +11,15 @@
 \end{lemma}
 
 \begin{proof}
-    It would follow first of all, that $C$ must have basis vectors since it is a vector space.
-    Suppose we take $G$ to have rows that are just the basis vectors of $C$.
-    It would further follow that by definition of dimension, there should be exactly $k$ such rows.
-    From there we could argue that multiplication by all possible $f\in \mathbb{F}^{k}_{q}$ represents all possible linear combinations of the basis vectors and thus the vector space defined by them, i.e. $C$
+Note that $C$ is a $k$-dimensional subspace of $\mathbb{F}_q^n$, and thus has a basis $\{\mathbf{g}_1, \ldots, \mathbf{g}_k\}$.
+Let $G$ be the $k \times n$ matrix whose $i$-th row is $\mathbf{g}_i$.
+For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector product is
+\[
+    \mathbf{f}G = \sum_{i=1}^k f_i \mathbf{g}_i.
+\]
+Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
+Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$.
+We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{proof}
 
 \begin{lemma}[generator-imp-subspace]
