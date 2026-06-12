@@ -1,9 +1,9 @@
 \section{Lemmas}
 
 \begin{lemma}[subspace-imp-generator]
-    \uses{def:subspace-def}
-    \uses{def:generator-def}
-    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists G$ an $kxn$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$
+    \uses{def:LC_subspace}
+    \uses{def:GeneratorMatrix}
+    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per LC_subspace, then $\exists G$ an $kxn$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$
 \end{lemma}
 
 \begin{proof}
@@ -14,8 +14,8 @@
 \end{proof}
 
 \begin{lemma}[generator-imp-subspace]
-    \uses{def:subspace-def}
-    \uses{def:generator-def}
+    \uses{def:LC_subspace}
+    \uses{def:GeneratorMatrix}
     Let $G$ an $kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{fG | f\in \mathbb{F}^{k}_{q}\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{lemma}
 
@@ -34,10 +34,10 @@
 \end{proof}
 
 \begin{lemma}[subspace-imp-parity-check]
-    \uses{def:subspace-def}
-    \uses{def:parity-check-def}
+    \uses{def:LC_subspace}
+    \uses{def:ParityCheckMatrix}
     \uses{lemma:subspace-imp-generator}
-    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per subspace-def, then $\exists H$ an $n-kxn$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$
+    Let $C$ be a linear code that is a subspace of $\mathbb{F}^{n}_{q}$ per LC_subspace, then $\exists H$ an $n-kxn$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^t=0\}$
 \end{lemma}
 
 \begin{proof}
@@ -52,8 +52,8 @@
 \end{proof}
 
 \begin{lemma}[parity-check-imp-subspace]
-    \uses{def:subspace-def}
-    \uses{def:parity-check-def}
+    \uses{def:LC_subspace}
+    \uses{def:ParityCheckMatrix}
     Let $H$ an $n-kxn$ over $\mathbb{F}_{q}$ matrix such that $C=\{f | f\in \mathbb{F}^{n}_{q}, Hf^T=0\}$, then $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{lemma}
 
