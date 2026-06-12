@@ -1,0 +1,83 @@
+\section{Lemmas}
+
+\begin{lemma}[subspace-imp-generator]
+    \uses{def:LC_subspace,def:GeneratorMatrix}
+    \label{lemma:subspace-imp-generator}
+    Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a $k \times n$ matrix $G$ over $\mathbb{F}_q$ such that
+    \[
+        C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
+    \]
+\end{lemma}
+
+\begin{proof}
+Note that $C$ is a $k$-dimensional subspace of $\mathbb{F}_q^n$, and thus has a basis $\{\mathbf{g}_1, \ldots, \mathbf{g}_k\}$.
+Let $G$ be the $k \times n$ matrix whose $i$-th row is $\mathbf{g}_i$.
+For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector product is
+\[
+    \mathbf{f}G = \sum_{i=1}^k f_i \mathbf{g}_i.
+\]
+Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
+Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$.
+We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
+\end{proof}
+
+\begin{lemma}[generator-imp-subspace]
+    \uses{def:LC_subspace, def:GeneratorMatrix}
+    \label{lemma:generator-imp-subspace}
+    Let $G \in \mathbb{F}^{k \times n}_{q}$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
+\end{lemma}
+
+\begin{proof}
+    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$
+    We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
+        $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$
+        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$ which should be in $C$ since
+        $\mathbb{F}^{k}_{q}$ is closed under addition and thus $x+y\in \mathbb{F}^{k}_{q}$
+    We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
+        $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$ ad that therefore for any $d\in \mathbb{F}_{q}$
+        $da=dxG$ and since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $da\in C$
+    These three conditions should be sufficient to prove that $C$ is a valid vector space.
+    It is also *tRivIallY* true that because $C$ remains expressed in terms of $\mathbb{F}_{q}$ that $C\subseteq \mathbb{F}^{n}_{q}$
+    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$
+\end{proof}
+
+\begin{lemma}[subspace-imp-parity-check]
+    \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
+    \label{lemma:subspace-imp-parity-check}
+    Let $C$ be a linear code of dimension $k$ that is a subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ such that
+    \[
+        C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
+    \]
+\end{lemma}
+
+\begin{proof}
+    Suppose we can use subspace-imp-generator to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$
+    We can extend this further to say that because the rows of $G$ are linearly independent since they are basis vectors and their quantity is $k$
+    and they can be put into standard form $G=[I_k|P]$, (need to find if there's a good theorem to use)
+    Then suppose we take $H=[-P^T|I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;)
+    We can then see that $HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0$
+    From this we can get that since, by our defintion of $G$ that the aforementioned $x$ such that $c=xG$ can be used to show that
+    $c\in C, \iff \exists x, c=xG \iff Hc^T=H(xG)^T=HG^Tx^t=0x^t=0$, meaning that $c\in C \iff Hc^T = 0$
+
+\end{proof}
+
+\begin{lemma}[parity-check-imp-subspace]
+    \uses{def:LC_subspace, def:ParityCheckMatrix}
+    \label{lemma:parity-check-imp-subspace}
+    Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
+\end{lemma}
+
+\begin{proof}
+    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$ trivially
+    We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
+        $Ha^T=Hb^T=0$ and therefore by distributivity of matrix multiplication and transposition, $H(a+b)^T = Ha^T+Hb^T=0+0 = 0$ so $a+b\in C$
+    We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
+        $Ha^T=0$, then for arbitrary $d\in \mathbb{F}_{q}$, that $H(da)^T=dHa^T=0$ because we can commute scalars with matrices,
+        giving us that $da\in C$
+    These three conditions should be sufficient to prove that $C$ is a valid vector space.
+    It is also true that since $C$ is defined in terms of elements of $\mathbb{F}^{n}_{q}$ that it is trivially a subset of $\mathbb{F}^{n}_{q}$
+\end{proof}
