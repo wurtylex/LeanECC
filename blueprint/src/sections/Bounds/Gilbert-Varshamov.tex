@@ -1,0 +1,94 @@
+\begin{lemma}[Covering]
+\label{lemma:covers}
+\uses{def:Code, def:q, def:MinDim, def:Vol}
+Let $q \geq 2$ and $n \geq d \geq 1$ be integers, and let $C \subseteq [q]^{n}$ be a
+code of minimum distance at least $d$ that is maximal with respect to inclusion.
+For $\mathbf{c} \in C$, let
+\[
+  B(\mathbf{c}, d-1) = \{ \mathbf{z} \in [q]^{n} : \Delta(\mathbf{c}, \mathbf{z}) \le d-1 \}
+\]
+denote the Hamming ball of radius $d-1$ centered at $\mathbf{c}$.
+Then
+\[
+  \bigcup_{\mathbf{c} \in C} B(\mathbf{c}, d-1) = [q]^{n}.
+\]
+\end{lemma}
+
+\begin{proof}
+  Let $\mathbf{z} \in [q]^{n}$ and suppose towards a contradiction that $\mathbf{z} \notin B(c, d-1)$ for every $\mathbf{c} \in C$, that is $\Delta(\mathbf{c}, \mathbf{z}) \geq d$ for all $\mathbf{c} \in C$.
+  Note that $\mathbf{z} \neq \mathbf{c}$ for every $\mathbf{c}$ since $d \geq 1$ and thus $\mathbf{z} \notin C$.
+  Then $C \cup \{\mathbf{z}\}$ is a code where any two distinct codewords lie at distance greater than $d$ meaning that $C$ is not maximal which is a contradiction.
+  Hence every $\mathbf{z}$ lies in $B(c,d-1)$ and
+  \[[q]^{n} = \bigcup_{\mathbf{c} \in C} B(\mathbf{c},d-1).\]
+\end{proof}
+
+\begin{lemma}[Maximal Packing]
+\label{lemma:MaximalPacking}
+\uses{def:Code, def:q, def:MinDim, def:Vol, lemma:covers}
+Let $q \geq 2$ and $n \geq d \geq 1$ be integers, and let $C \subseteq [q]^n$ be
+maximal, with respect to inclusion, among all codes of minimum distance at
+least $d$.
+Then
+\[
+  |C| \geq \frac{q^n}{\Vol_q(n,d-1)}.
+\]
+\end{lemma}
+
+\begin{proof}
+  For every codeword $c \in C$ we define a ball $B(\mathbf{c},d-1)$.
+  Note that by Lemma~\ref{lemma:covers}, the union of these balls cover $[q]^{n}$.
+  Then we must have the following inequality,
+  \[
+  q^{n} =
+  |[q]^{n}| = 
+  \left|\bigcup_{\mathbf{c} \in C}B(\mathbf{c}, d-1)\right| \leq
+  \sum_{\mathbf{c} \in C} |B(\mathbf{c},d-1)| =
+  |C| \cdot \Vol_{q}(n,d-1) \implies
+  |C| \geq \frac{q^{n}}{\Vol_{q}(n,d-1)}.
+  \]
+\end{proof}
+
+\begin{theorem}[Gilbert-Varshamov Bound; general codes]
+\label{thm:GVBgc}
+\uses{def:Code, def:q, def:rate, def:qentropy, def:RelMinDim, lemma:MaximalPacking, lemma:VolEntropy, lemma:HqMono}
+Let $q \geq 2$ be an integer.
+For every $0 \leq \delta < 1 - \frac{1}{q}$ and every positive integer $n$, there exists a $q$-ary code of block length $n$ with rate $R \geq 1 - H_q(\delta)$ and relative distance at least $\delta$.
+\end{theorem}
+
+\begin{proof}
+    Fix $\delta$ with $0 \leq \delta < 1 - \frac{1}{q}$ and a positive integer $n$, and put
+    \[
+      d = \max(\lceil \delta n \rceil, 1).
+    \]
+    Then $d \geq 1$, and $d \leq n$ since $\delta < 1$ gives $\lceil \delta n \rceil \leq n$, so $n \geq d \geq 1$. Note also $d \geq \delta n$ and $d - 1 \leq \delta n$.
+    The codes $C \subseteq [q]^{n}$ of minimum distance at least $d$ form a finite nonempty family (any singleton works), so we may pick one, call it $C$, that is maximal with respect to inclusion.
+    By Lemma~\ref{lemma:MaximalPacking},
+    \[
+      |C| \geq \frac{q^{n}}{\Vol_{q}(n,d-1)}.
+    \]
+    Since $\Vol_{q}(n,d-1) \leq q^{n}$ we have $|C| \geq 1$, so taking $\log_{q}$ and dividing by $n$,
+    \[
+      R = \frac{\log_{q}|C|}{n} \geq 1 - \frac{\log_{q}\Vol_{q}(d-1,n)}{n}.
+    \]
+    Note that $0 \leq \frac{d-1}{n} \leq \delta < 1 - \frac{1}{q}$, so by Lemma~\ref{lemma:VolEntropy} at $\lambda = \frac{d-1}{n}$,
+    \[
+      \Vol_{q}(n,d-1) \leq q^{\,n H_q(\frac{d-1}{n})} \implies \frac{\log_{q}\Vol_{q}(d-1,n)}{n} \leq H_q\!\left(\tfrac{d-1}{n}\right),
+    \]
+    and hence $R \geq 1 - H_q(\frac{d-1}{n})$. Finally $H_q$ is nondecreasing on $[0, 1 - \frac{1}{q}]$ by Lemma~\ref{lemma:HqMono} and $\frac{d-1}{n} \leq \delta$, so $H_q(\frac{d-1}{n}) \leq H_q(\delta)$ and
+    \[
+      R \geq 1 - H_q(\delta).
+    \]
+    The relative distance of $C$ is at least $\frac{d}{n} \geq \delta$.
+    Hence $C$ is a $q$-ary code of block length $n$ with rate $R \geq 1 - H_q(\delta)$ and relative distance at least $\delta$ as desired.
+\end{proof}
+
+\begin{theorem}[Gilbert-Varshamov Bound; linear codes]
+\uses{def:Code, def:q, def:rate, def:qentropy, def:MinDim, def:LinearCode, def:GeneratorMatrix}
+Let $q$ be a prime power.
+For every $0 \leq \delta < 1 - \frac{1}{q}$, every $0 \leq \varepsilon \leq 1 - H_q(\delta)$, and every positive integer $n$, set $k = n\bigl(1 - H_q(\delta) - \varepsilon\bigr)$.
+If $G \in \mathbb{F}^{k \times n}_{q}$ is picked uniformly at random, then $G$ generates a code of rate $1 - H_q(\delta) - \varepsilon$ and relative distance at least $\delta$ with probability strictly greater than $1 - q^{-\varepsilon n}$.
+\end{theorem}
+
+\begin{proof}
+    TODO
+\end{proof}
