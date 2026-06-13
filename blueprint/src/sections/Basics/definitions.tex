@@ -37,3 +37,37 @@ Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
     \]
     where $k$ is the dimension and block length of $n$.
 \end{definition}
+
+\begin{definition}[$q$-ary Entropy function]
+  \label{def:qentropy}
+  Let $q$ be an integer and $x$ be a real number such that $q \geq 2$ and $0 \leq x \leq 1$.
+  Then the $q$-ary entropy function is defined as follows:
+  \[H_{q}(x) = x \log_{q}(q-1) - x \log_{q}(x) - (1-x)\log_{q}(1-x).\]
+\end{definition}
+
+\begin{definition}[Minimum Distance]
+  \label{def:MinDim}
+  Let $C \subseteq \Sigma^{n}$.
+  The minimum distance of $C$, denoted $\Delta(C)$, is defined to be
+  \[\Delta(C) = \min_{\mathbf{c_{1}} \neq \mathbf{c_{2}} \in C} \Delta(\mathbf{c_{1}}, \mathbf{c_{2}}).\]
+\end{definition}
+
+\begin{definition}[Relative Minimum Distance]
+  \label{def:RelMinDim}
+  Let $C \subseteq \Sigma^{n}$.
+  The minimum distance of $C$, denoted $\delta(C)$, is defined to be
+  \[\delta(C) = \min_{\mathbf{c_{1}} \neq \mathbf{c_{2}} \in C} \delta(\mathbf{c_{1}}, \mathbf{c_{2}}).\]
+\end{definition}
+
+\begin{definition}[Hamming Ball]
+  \label{def:HammingBall}
+  For any vector $\mathbf{x} \in [q]^{n}$,
+  \[B(\mathbf{x},e) = \{\mathbf{y} \in [q]^{n}\mid \Delta(\mathbf{x},\mathbf{y}) \leq e\}.\]
+\end{definition}
+
+\begin{definition}[Volume]
+  \label{def:Volume}
+  \uses{def:HammingBall}
+  \[V_{q}(n,r) = \sum^{r}_{i = 0} \binom{n}{i}(q-1)^{i}\]
+  where $r$ is the radius.
+\end{definition}

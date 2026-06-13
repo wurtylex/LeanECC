@@ -26,3 +26,37 @@
     By Lemma~\ref{lem:dim_le_n}, $k \leq n$, and $n \ge 0$.
     Therefore $R = k/n \leq 1$.
 \end{proof}
+
+\begin{lemma}[Volume entropy bound]
+\label{lemma:VolEntropy}
+\uses{def:q, def:Vol, def:qentropy}
+Let $q \geq 2$ and $n \geq 1$ be integers, and let $r$ be an integer with $0 \leq r$ and $\frac{r}{n} \leq 1 - \frac{1}{q}$. Then
+\[
+  \Vol_q(r, n) \leq q^{\,n H_q(r/n)}.
+\]
+\end{lemma}
+\begin{proof}
+  Write $\lambda = \frac{r}{n}$. If $r = 0$ then $\Vol_q(0, n) = 1 = q^{n H_q(0)}$, so assume $r \geq 1$, giving $0 < \lambda \leq 1 - \frac{1}{q} < 1$. From the definition of $H_q$,
+  \[
+    q^{n H_q(\lambda)} = (q-1)^{r}\, \lambda^{-r}\,(1-\lambda)^{-(n-r)},
+  \]
+  so it suffices to show $\Vol_q(r,n)\,(q-1)^{-r}\lambda^{r}(1-\lambda)^{n-r} \leq 1$. Put $\theta = \frac{\lambda}{(q-1)(1-\lambda)}$. Note that $\lambda \leq 1 - \frac{1}{q}$ gives $\frac{\lambda}{1-\lambda} \leq q-1$, hence $0 \leq \theta \leq 1$. For each $0 \leq i \leq r$, since $r - i \geq 0$ and $\theta \leq 1$,
+  \[
+    \binom{n}{i} (q-1)^{i} (q-1)^{-r}\lambda^{r}(1-\lambda)^{n-r} = \binom{n}{i} \lambda^{i} (1-\lambda)^{n-i}\,\theta^{\,r-i} \leq \binom{n}{i} \lambda^{i} (1-\lambda)^{n-i}.
+  \]
+  Summing over $0 \leq i \leq r$ and extending the sum to $0 \leq i \leq n$,
+  \[
+    \Vol_q(r,n)\,(q-1)^{-r}\lambda^{r}(1-\lambda)^{n-r} \leq \sum_{i=0}^{n}\binom{n}{i} \lambda^{i}(1-\lambda)^{n-i} = (\lambda + (1-\lambda))^{n} = 1,
+  \]
+  the last step by the binomial theorem. Rearranging gives $\Vol_q(r,n) \leq q^{n H_q(\lambda)}$.
+  \textcolor{red}{might want to rewrite this later, was burned out while writing}
+\end{proof}
+
+\begin{lemma}[Monotonicity of $H_q$]
+\label{lemma:HqMono}
+\uses{def:q, def:qentropy}
+Let $q \geq 2$ be an integer. Then $H_q$ is nondecreasing on $[0, 1 - \frac{1}{q}]$.
+\end{lemma}
+\begin{proof}
+  This is obvious, we can write this later.
+\end{proof}
