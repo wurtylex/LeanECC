@@ -30,16 +30,23 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{lemma}
 
 \begin{proof}
+    First of all, we know $C\subseteq \mathbb{F}^{n}_{q}$
+        because $\forall c\in C$, we know that $G$ constrains $c$ to be $n$ dimensional
+        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication
+        that then $c\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$
+        Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
     We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$
-    We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
+        therefore $\forall G$, $\vec{0}\in C$
+    We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
         $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$
-        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$ which should be in $C$ since
-        $\mathbb{F}^{k}_{q}$ is closed under addition and thus $x+y\in \mathbb{F}^{k}_{q}$
-    We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
-        $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$ ad that therefore for any $d\in \mathbb{F}_{q}$
-        $da=dxG$ and since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $da\in C$
+        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$
+        and since $x+y\in \mathbb{F}^{k}_{q}$ because of its closure under addition, this means
+        $a+b=(x+y)G\in C $
+    We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
+        $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$
+        and that therefore $\forall d\in \mathbb{F}_{q}, da=dxG=(dx)G$
+        and since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(xG)\in C$
     These three conditions should be sufficient to prove that $C$ is a valid vector space.
-    It is also *tRivIallY* true that because $C$ remains expressed in terms of $\mathbb{F}_{q}$ that $C\subseteq \mathbb{F}^{n}_{q}$
     Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{proof}
 
