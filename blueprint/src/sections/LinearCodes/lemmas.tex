@@ -79,12 +79,18 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{lemma}
 
 \begin{proof}
-    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$ trivially
-    We can show that $C$ is closed under addition by considering that for any arbitrary $a,b\in C$ it means that
-        $Ha^T=Hb^T=0$ and therefore by distributivity of matrix multiplication and transposition, $H(a+b)^T = Ha^T+Hb^T=0+0 = 0$ so $a+b\in C$
-    We can show that $C$ is closed under scalar multiplication by considering that for any arbitrary $a\in C$ that
-        $Ha^T=0$, then for arbitrary $d\in \mathbb{F}_{q}$, that $H(da)^T=dHa^T=0$ because we can commute scalars with matrices,
+    First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because $C$ every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$
+        Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
+    We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$
+        This also gives us that $Ha^T+Hb^T= 0+0 = 0$
+        and therefore by distributivity of matrix multiplication, We have that $Ha^T+Hb^T = H(a^T+b^T) = 0$
+        and by the distributivity of transverses, that $Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0$
+        and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition,
+        and because $H(a+b)^T = 0$, $a+b\in C$
+    We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
+        $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
+        which $\implies H(da)^T==0$ because we can commute scalars with matrices and vectors,
         giving us that $da\in C$
     These three conditions should be sufficient to prove that $C$ is a valid vector space.
-    It is also true that since $C$ is defined in terms of elements of $\mathbb{F}^{n}_{q}$ that it is trivially a subset of $\mathbb{F}^{n}_{q}$
 \end{proof}
