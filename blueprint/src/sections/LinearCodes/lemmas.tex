@@ -78,14 +78,14 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
         I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1,
         Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns
         and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix
-    We can then see that $HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0$
+    We can then see that $HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0^{(n-k) x k}$ i.e. an $(n-k) x k$ with only zeroes as entries
         To make this a little bit more detailed, we can first get that $HG^T$ is a $(n-k) \times k$ matrix, since it's the row count of $H$ and $G$
-        Then $\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}=0$
-    Using this we can make the claim that $\forall x \in \mathbb{F}^{k}_{q}, H(xG)^T=0$ by showing
+        Then $\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}=0^{(n-k) x k}$
+    Using this we can make the claim that $\forall x \in \mathbb{F}^{k}_{q}, H(xG)^T=\mathbf{0}$ by showing
         $\forall x \in \mathbb{F}^{k}_{q} H(xG)^T=HG^Tx^t$ from distributing the transverse
-        And then, from our statement above, we have that $H(xG)^T=HG^Tx^t=0^{(n-k) x k}x^t=\vec{0}$
+        And then, from our statement above, we have that $H(xG)^T=HG^Tx^t=0^{(n-k) x k}x^t=\mathbf{0}$
     And, from the basic definition of $G$ $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, c=xG$
-    Which we can use our equivalence to say $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, Hc^T=0$ yielding the desired result
+    Which we can use our equivalence to say $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, Hc^T=\mathbf{0}$ yielding the desired result
 \end{proof}
 
 \begin{lemma}[parity-check-imp-subspace]
