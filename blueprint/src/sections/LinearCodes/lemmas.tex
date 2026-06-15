@@ -61,14 +61,31 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{lemma}
 
 \begin{proof}
-    Suppose we can use subspace-imp-generator to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$
-    We can extend this further to say that because the rows of $G$ are linearly independent since they are basis vectors and their quantity is $k$
-    and they can be put into standard form $G=[I_k|P]$, (need to find if there's a good theorem to use)
+    We can use subspace-imp-generator to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$
+    We can extend this further to say that because:
+        The rows of $G$ are linearly independent since they are basis vectors
+        $G$ has $$k$ rows
+        $G$ is not necessarily unique for any given $C$
+    We can use Gaussian elimination to attain standard form $G'=[I_k|P]$ where $P$ is some $k \times (n-k)$ submatrix
+        More formally,
+        \[
+            \exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG, \forall i,j \leq k , i\neq j \implies G_{ij} = 0, i=j \implies G_{ij}=1
+        \]
+    (need to find if there's a good theorem to use in lean)
+        I found a more elaborate exmplanation of the above statement here
+        https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent
     Then suppose we take $H=[-P^T|I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;)
+        I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1,
+        Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns
+        and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix
     We can then see that $HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0$
-    From this we can get that since, by our defintion of $G$ that the aforementioned $x$ such that $c=xG$ can be used to show that
-    $c\in C, \iff \exists x, c=xG \iff Hc^T=H(xG)^T=HG^Tx^t=0x^t=0$, meaning that $c\in C \iff Hc^T = 0$
-
+        To make this a little bit more detailed, we can first get that $HG^T$ is a $(n-k) \times k$ matrix, since it's the row count of $H$ and $G$
+        Then $\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}=0$
+    Using this we can make the claim that $\forall x \in \mathbb{F}^{k}_{q}, H(xG)^T=0$ by showing
+        $\forall x \in \mathbb{F}^{k}_{q} H(xG)^T=HG^Tx^t$ from distributing the transverse
+        And then, from our statement above, we have that $H(xG)^T=HG^Tx^t=0^{(n-k) x k}x^t=\vec{0}$
+    And, from the basic definition of $G$ $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, c=xG$
+    Which we can use our equivalence to say $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, Hc^T=0$ yielding the desired result
 \end{proof}
 
 \begin{lemma}[parity-check-imp-subspace]
