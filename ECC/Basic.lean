@@ -11,6 +11,8 @@ public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.InformationTheory.Hamming
+public import Mathlib.Data.ENat.Lattice
 
 /-!
 (Doc String that we happen to need fill this in later)
@@ -21,7 +23,7 @@ In this file we define #TODO
 
 @[expose] public section
 
-variable (α : Type*) [Fintype α] (n : ℕ)
+variable (α : Type*) [Fintype α] [DecidableEq α] (n : ℕ)
 
 /-- A code of blocklength n over α is a subset of α^n. -/
 def Code : Type _ := Set (Fin n → α)
@@ -43,6 +45,11 @@ noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
 /-- The rate of Code C is k / n where k is the dimension of C (note that n = 0 then rate is 0) -/
 noncomputable def rate (C : Code α n) : ℝ := C.dim / n
 
+/-- Minimum distance is hamming distance -/
+noncomputable def minDist (C : Code α n) : ℕ∞ :=
+  ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
+
+omit [DecidableEq α] in
 /-- Dimension of a code is at most its blocklength -/
 lemma dim_le_n (C : Code α n) : C.dim ≤ n := by
   by_cases hq : 2 ≤ Fintype.card α
@@ -66,6 +73,7 @@ lemma dim_le_n (C : Code α n) : C.dim ≤ n := by
     rw [hdim];
     positivity
 
+omit [DecidableEq α] in
 /-- Rate is at most 1 -/
 lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
