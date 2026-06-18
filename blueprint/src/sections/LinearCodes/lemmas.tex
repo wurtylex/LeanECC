@@ -1,6 +1,6 @@
 \section{Lemmas}
 
-\begin{lemma}[subspace-imp-generator]
+\begin{lemma}[Subspace Implies Generator]
     \uses{def:LC_subspace,def:GeneratorMatrix}
     \label{lemma:subspace-imp-generator}
     Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
@@ -22,7 +22,7 @@ Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span eq
 We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{proof}
 
-\begin{lemma}[generator-imp-subspace]
+\begin{lemma}[Generator Implies Subspace]
     \uses{def:LC_subspace, def:GeneratorMatrix}
     \label{lemma:generator-imp-subspace}
     Let $G \in \mathbb{F}^{k \times n}_{q}$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
@@ -31,26 +31,25 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 
 \begin{proof}
     First of all, we know $C\subseteq \mathbb{F}^{n}_{q}$
-        because $\forall c\in C$, we know that $G$ constrains $c$ to be $n$ dimensional
-        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication
-        that then $c\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$
-        Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
-    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$
-        therefore $\forall G$, $\vec{0}\in C$
-    We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
-        $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$
-        and from distributivity of matrix multiplication that $a+b=xG+yG=(x+y)G$
-        and since $x+y\in \mathbb{F}^{k}_{q}$ because of its closure under addition, this means
-        $a+b=(x+y)G\in C $
-    We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
-        $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$
-        and that therefore $\forall d\in \mathbb{F}_{q}, da=dxG=(dx)G$
-        and since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(xG)\in C$
-    These three conditions should be sufficient to prove that $C$ is a valid vector space.
+        because $\forall c\in C$, $G$ constrains $c$ to be $n$ dimensional. 
+        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $c\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    \begin{itemize}
+        \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$.
+        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
+            $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$, 
+            distributivity of matrix multiplication gives us $a+b=xG+yG=(x+y)G$, 
+            and since $x+y\in \mathbb{F}^{k}_{q}$ because of closure under addition, 
+            $a+b=(x+y)G\in C $
+        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
+            $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$.
+            And therefore, $\forall d\in \mathbb{F}_{q}, da=dxG=(dx)G$. 
+            And since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(xG)\in C$
+        These three conditions should be sufficient to prove that $C$ is a valid vector space.
+    \end{itemize}
     Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$
 \end{proof}
 
-\begin{lemma}[subspace-imp-parity-check]
+\begin{lemma}[Subspace implies Parity Check]
     \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
     \label{lemma:subspace-imp-parity-check}
     Let $C$ be a linear code of dimension $k$ that is a subspace of $\mathbb{F}^{n}_{q}$.
@@ -64,7 +63,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     We can use subspace-imp-generator to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$
     We can extend this further to say that because:
         The rows of $G$ are linearly independent since they are basis vectors
-        $G$ has $$k$ rows
+        $G$ has $k$ rows
         $G$ is not necessarily unique for any given $C$
     We can use Gaussian elimination to attain standard form $G'=[I_k|P]$ where $P$ is some $k \times (n-k)$ submatrix
         More formally,
@@ -73,7 +72,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
         \]
     (need to find if there's a good theorem to use in lean)
         I found a more elaborate exmplanation of the above statement here
-        https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent
+        `https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent
     Then suppose we take $H=[-P^T|I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;)
         I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1,
         Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns
@@ -93,7 +92,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     Which we can use our equivalence to say $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, Hc^T=\mathbf{0}$ yielding the desired result
 \end{proof}
 
-\begin{lemma}[parity-check-imp-subspace]
+\begin{lemma}[Parity Check Implies subspace]
     \uses{def:LC_subspace, def:ParityCheckMatrix}
     \label{lemma:parity-check-imp-subspace}
     Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}$.
@@ -101,18 +100,17 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{lemma}
 
 \begin{proof}
-    First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because $C$ every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$
-        Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
-    We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
-    We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$
-        This also gives us that $Ha^T+Hb^T= 0+0 = 0$
-        and therefore by distributivity of matrix multiplication, We have that $Ha^T+Hb^T = H(a^T+b^T) = 0$
-        and by the distributivity of transverses, that $Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0$
-        and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition,
-        and because $H(a+b)^T = 0$, $a+b\in C$
-    We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
-        $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
-        which $\implies H(da)^T==0$ because we can commute scalars with matrices and vectors,
-        giving us that $da\in C$
+    First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because $C$ every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    \begin{itemize}
+        \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
+        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$. 
+            This also gives us that $Ha^T+Hb^T= 0+0 = 0$
+            and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that 
+            \[Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0\]
+            and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, and because $H(a+b)^T = 0$, $a+b\in C$
+        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
+            $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
+            which $\implies H(da)^T==0$ because we can commute scalars with matrices and vectors,
+            giving us that $da\in C$
     These three conditions should be sufficient to prove that $C$ is a valid vector space.
 \end{proof}
