@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 wurtylex (Anthony Chang). All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang) 
+Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang)
 -/
 
 module
@@ -57,6 +57,18 @@ omit [Fintype α] in
 @[simp]
 lemma mem_hammingBall {x y : Fin n → α} {e : ℕ} :
     y ∈ hammingBall α n x e ↔ hammingDist x y ≤ e := Iff.rfl
+
+/-- The volume of a Hamming ball of radius `r` over an alphabet of size `q` with blocklength `n`:
+`V_q(n,r) = ∑_{i=0}^r C(n,i) · (q-1)^i`. -/
+def hammingVolume (q n r : ℕ) : ℕ :=
+  ∑ i ∈ Finset.range (r + 1), n.choose i * (q - 1) ^ i
+
+@[simp]
+lemma hammingVolume_def (q n r : ℕ) :
+    hammingVolume q n r = ∑ i ∈ Finset.range (r + 1), n.choose i * (q - 1) ^ i := rfl
+
+lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
+  simp [hammingVolume]
 
 omit [DecidableEq α] in
 /-- Dimension of a code is at most its blocklength -/
