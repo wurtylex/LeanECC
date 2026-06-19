@@ -49,6 +49,15 @@ noncomputable def rate (C : Code α n) : ℝ := C.dim / n
 noncomputable def minDist (C : Code α n) : ℕ∞ :=
   ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
 
+/-- The Hamming ball of radius `e` centered at `x`: all words within Hamming distance `e` of `x`. -/
+def hammingBall (x : Fin n → α) (e : ℕ) : Set (Fin n → α) :=
+  {y | hammingDist x y ≤ e}
+
+omit [Fintype α] in
+@[simp]
+lemma mem_hammingBall {x y : Fin n → α} {e : ℕ} :
+    y ∈ hammingBall α n x e ↔ hammingDist x y ≤ e := Iff.rfl
+
 omit [DecidableEq α] in
 /-- Dimension of a code is at most its blocklength -/
 lemma dim_le_n (C : Code α n) : C.dim ≤ n := by
