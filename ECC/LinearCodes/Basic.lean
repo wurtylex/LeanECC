@@ -51,6 +51,26 @@ of rank n-k satisfying C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} -/
 def ParityCheckMatrix {m : ℕ} (H : Matrix (Fin m) (Fin n) F) : LinearCode F n :=
   ⟨LinearMap.ker (mulVecLin H)⟩
 
+/-- If C is an [n,k]_q linear code then there is a matrix G ∈ 𝔽^{k × n}_q
+of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q} -/
+lemma SubspaceImpliesGenerator {C : LinearCode F n} :
+    ∃ (G : Matrix (Fin k) (Fin n) F), GeneratorMatrix G = C := by sorry
+
+/-- If G ∈ 𝔽^{k × n}_q is a matrix of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q} 
+then C is an [n,k]_q linear code -/
+lemma GeneratorImpliesSubspace {G : Matrix (Fin k) (Fin n) F} :
+    ∃ (C : LinearCode F n), GeneratorMatrix G = C := by sorry
+
+/-- If C is an [n,k]_q linear code then there is a matrix H ∈ 𝔽^{(n-k) × n}_q
+of rank n-k satisfying C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} -/
+lemma SubspaceImpliesParityCheck {C : LinearCode F n} :
+    ∃ (H : Matrix (Fin m) (Fin n) F), ParityCheckMatrix H = C := by sorry
+
+/-- If H ∈ 𝔽^{(n-k) × n}_q is a matrix of rank n-k satisfying 
+C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} then C is an [n,k]_q linear code-/
+lemma ParityCheckImpliesSubspace {H : Matrix (Fin m) (Fin n) F} :
+    ∃ (C : LinearCode F n), ParityCheckMatrix H = C := by sorry
+
 end LinearCode
 
 end
