@@ -66,7 +66,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
         \item $G$ has $k$ rows
         \item $G$ is not necessarily unique for any given $C$
     \end{itemize}
-    We can use Gaussian elimination to attain standard form $G'=[I_k|P]$ where $P$ is some $k \times (n-k)$ submatrix
+    We can use Gaussian elimination to attain standard form $G'=[I_k\mid P]$ where $P$ is some $k \times (n-k)$ submatrix
         More formally,
         \[
             \exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG, \forall i,j \leq k , i\neq j \implies G_{ij} = 0, i=j \implies G_{ij}=1
@@ -74,7 +74,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     (need to find if there's a good theorem to use in lean, I found a more elaborate exmplanation of the above statement here
         `https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent`)
     \\\\
-    Then suppose we take $H=[-P^T|I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;). I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
+    Then suppose we take $H=[-P^T\mid I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;). I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
     \\\\
     Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns, and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix. We can then see that 
     \[HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0^{(n-k) x k}\] i.e. an $(n-k) x k$ with only zeroes as entries
