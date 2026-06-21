@@ -65,6 +65,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
         \item The rows of $G$ are linearly independent since they are basis vectors
         \item $G$ has $k$ rows
         \item $G$ is not necessarily unique for any given $C$
+        \item We are given (https://www.cfm.brown.edu/people/dobrush/cs52/Mathematica/Part3/rank.html) that $G$ must have $k$ linearly independent columns since its column rank equals its row rank of $k$
     \end{itemize}
     We can use Gaussian elimination to attain standard form $G'=[I_k\mid P]$ where $P$ is some $k \times (n-k)$ submatrix
         More formally,
@@ -74,7 +75,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     (need to find if there's a good theorem to use in lean, I found a more elaborate exmplanation of the above statement here
         `https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent`)
     \\\\
-    Then suppose we take $H=[-P^T\mid I_{n-k}]$ (I feel like handling these submatrices is gonna be hard ;-;). I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
+    Then suppose we take $H=[-P^T\mid I_{n-k}]$. I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
     \\\\
     Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns, and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix. We can then see that 
     \[HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0^{(n-k) x k}\] i.e. an $(n-k) x k$ with only zeroes as entries
@@ -112,11 +113,10 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because $C$ every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
     \begin{itemize}
         \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
-        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$. 
-            This also gives us that $Ha^T+Hb^T= 0+0 = 0$
+        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$, meaning $Ha^T+Hb^T= 0+0 = 0$
             and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that 
             \[Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0\]
-            and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, and because $H(a+b)^T = 0$, $a+b\in C$
+            and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(a+b)^T = 0$, and $a+b\in C$
         \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
             $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
             which $\implies H(da)^T==0$ because we can commute scalars with matrices and vectors,
