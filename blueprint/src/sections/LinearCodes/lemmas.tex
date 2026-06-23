@@ -4,7 +4,7 @@
     \uses{def:LC_subspace,def:GeneratorMatrix}
     \label{lemma:subspace-imp-generator}
     Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a $k \times n$ matrix $G$ over $\mathbb{F}_q$ such that
+    Then there exists a $k \times n$ matrix $G$ with rank $k$ over $\mathbb{F}_q$ such that
     \[
         C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
     \]
@@ -25,8 +25,8 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \begin{lemma}[Generator Implies Subspace]
     \uses{def:LC_subspace, def:GeneratorMatrix}
     \label{lemma:generator-imp-subspace}
-    Let $G \in \mathbb{F}^{k \times n}_{q}$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
-    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
+    Let $G \in \mathbb{F}^{k \times n}_{q}$ with rank $k$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
+    Then $C$ is a $k$-dimensional linear code over $\mathbb{F}^{n}_{q}$.
 \end{lemma}
 
 \begin{proof}
@@ -53,7 +53,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
     \label{lemma:subspace-imp-parity-check}
     Let $C$ be a linear code of dimension $k$ that is a subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ such that
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ such that
     \[
         C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
     \]
@@ -105,8 +105,8 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \begin{lemma}[Parity Check Implies subspace]
     \uses{def:LC_subspace, def:ParityCheckMatrix}
     \label{lemma:parity-check-imp-subspace}
-    Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}$.
-    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$.
+    Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$ with dimension $k$.
 \end{lemma}
 
 \begin{proof}
