@@ -4,7 +4,7 @@
     \uses{def:LC_subspace,def:GeneratorMatrix}
     \label{lemma:subspace-imp-generator}
     Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a $k \times n$ matrix $G$ over $\mathbb{F}_q$ such that
+    Then there exists a $k \times n$ matrix $G$ with rank $k$ over $\mathbb{F}_q$ such that
     \[
         C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
     \]
@@ -19,7 +19,7 @@ For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector pro
 \]
 Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
 Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$.
-We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
+We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follows that $rank(G)=k$ since its rows are basis vectors.
 \end{proof}
 
 \begin{lemma}[Generator Implies Subspace]
@@ -53,38 +53,23 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
     \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
     \label{lemma:subspace-imp-parity-check}
     Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ such that
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ such that
     \[
         C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
     \]
 \end{lemma}
 
 \begin{proof}
-    We can use the Subspace Implies Generator lemma to say that we know that $\exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG$. We can extend this further to say that because:
-    \begin{itemize}
-        \item The rows of $G$ are linearly independent since they are basis vectors
-        \item $G$ has $k$ rows
-        \item $G$ is not necessarily unique for any given $C$
-        \item We are given (https://www.cfm.brown.edu/people/dobrush/cs52/Mathematica/Part3/rank.html) that $G$ must have $k$ linearly independent columns since its column rank equals its row rank of $k$
-    \end{itemize}
-    We can use Gaussian elimination to attain standard form $G'=[I_k\mid P]$ where $P$ is some $k \times (n-k)$ submatrix
-        More formally,
-        \[
-            \exists G, \forall c \in C, \exists x\in \mathbb{F}^{k}_{q}, c=xG, \forall i,j \leq k , i\neq j \implies G_{ij} = 0, i=j \implies G_{ij}=1
-        \]
-    (need to find if there's a good theorem to use in lean, I found a more elaborate exmplanation of the above statement here
-        `https://math.stackexchange.com/questions/4166013/why-are-the-codes-generated-by-g-and-i-k-mid-a-equivalent`)
+    From subspace-imp-std-form-generator we have $G\in \mathbb{F}^{k \times n}_{q}$ of form $G=[I_k\mid P]$. Then suppose we take $H=[-P^T\mid I_{n-k}]$. I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
     \\\\
-    Then suppose we take $H=[-P^T\mid I_{n-k}]$. I.e. the first $k$ columns of $H$ are going to be the rows of $P$ multiplied by -1.
-    \\\\
-    Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns, and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix. We can then see that 
+    Note that this preserves the $n-k$ rows requirement since $P$ has $n-k$ columns, and similarly, the right hand side of the matrix is the $n-k x n-k$ identity matrix. We can then see that
     \[HG^T=I_k\cdot -P^T + I_{n-k}\cdot P^t= -P^T+P^t=0^{(n-k) x k}\] i.e. an $(n-k) x k$ with only zeroes as entries
     \\\\
-        To make this a little bit more detailed, we can first get that $HG^T$ is a $(n-k) \times k$ matrix, since it's the row count of $H$ and $G$.
-        If we look at matrix multiplication in terms of the dot products of rows of $H$ and columns of $G^T$,
-        Essentially meaning that each entry in $HG^T$ is some dot product of a row of $H$ and a row of $G$
-        More formally $\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}$ is the dot product of the $ith$ row of $H$ and the $jth$ row of $G$. Which will then be the $jth$ element of the $ith$ row of $-P^T$ or effectively $-1*P^T_{ij}=-1*P_{ji}$ plus the $ith$ element of the $jth$ row of $P$ or $P_{ji}$ which means 
-        \[\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}=P_{ji}-P_{ji}=0\]
+    To make this a little bit more detailed, we can first get that $HG^T$ is a $(n-k) \times k$ matrix, since it's the row count of $H$ and $G$.
+    If we look at matrix multiplication in terms of the dot products of rows of $H$ and columns of $G^T$,
+    Essentially meaning that each entry in $HG^T$ is some dot product of a row of $H$ and a row of $G$
+    More formally $\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}$ is the dot product of the $ith$ row of $H$ and the $jth$ row of $G$. Which will then be the $jth$ element of the $ith$ row of $-P^T$ or effectively $-1*P^T_{ij}=-1*P_{ji}$ plus the $ith$ element of the $jth$ row of $P$ or $P_{ji}$ which means 
+    \[\forall i \in [n-k], \forall j \in [k], (HG^T)_{ij}=P_{ji}-P_{ji}=0\]
     Using this we can make the claim that $\forall x \in \mathbb{F}^{k}_{q}, H(xG)^T=\mathbf{0}$ by showing
         $\forall x \in \mathbb{F}^{k}_{q} H(xG)^T=HG^Tx^t$ from distributing the transverse. And then, from our statement above, we have that \[H(xG)^T=HG^Tx^t=0^{(n-k) x k}x^t=\mathbf{0}\]
     And, from the basic definition of $G$ $c\in C \iff \exists x \in \mathbb{F}^{k}_{q}, c=xG$
