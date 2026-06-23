@@ -110,17 +110,20 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \end{lemma}
 
 \begin{proof}
-    First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because $C$ every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
-    \begin{itemize}
-        \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
-        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$, meaning $Ha^T+Hb^T= 0+0 = 0$
-            and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that 
-            \[Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0\]
-            and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(a+b)^T = 0$, and $a+b\in C$
-        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
-            $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
-            which $\implies H(da)^T=0$ because we can commute scalars with matrices and vectors,
-            giving us that $da\in C$
-    \end{itemize}
-    These three conditions should be sufficient to prove that $C$ is a valid vector space.
+First we can show that $C \subseteq \mathbb{F}^{n}_{q}$ because every element of $C$ is already defined as being in $\mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+\begin{itemize}
+    \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
+    \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$, meaning $Ha^T+Hb^T= 0+0 = 0$
+        and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that 
+        \[Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0\]
+        and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(a+b)^T = 0$, and $a+b\in C$
+    \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
+        $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
+        which $\implies H(da)^T=0$ because we can commute scalars with matrices and vectors,
+        giving us that $da\in C$
+\end{itemize}
+These three conditions should be sufficient to prove that $C$ is a valid vector space, and is the kernel of $H$. Using rank-nullity theorem, we can see
+\[rank(H)+dim(C)=dim(\mathbb{F}^{n}_{q})\] 
+\[\implies n-k+dim(C)=n\] 
+
 \end{proof}
