@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 wurtylex (Anthony Chang). All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang) 
+Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang)
 -/
 
 module
@@ -54,22 +54,24 @@ def ParityCheckMatrix {m : ℕ} (H : Matrix (Fin m) (Fin n) F) : LinearCode F n 
 /-- If C is an [n,k]_q linear code then there is a matrix G ∈ 𝔽^{k × n}_q
 of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q} -/
 lemma SubspaceImpliesGenerator {C : LinearCode F n} :
-    ∃ (G : Matrix (Fin k) (Fin n) F), GeneratorMatrix G = C := by sorry
+    ∃ k : ℕ, (k ≤ n) ∧ (dim C = k) ∧
+    ∃ G : Matrix (Fin k) (Fin n) F, (GeneratorMatrix G = C) ∧ (Matrix.rank G = k) := by sorry
 
 /-- If G ∈ 𝔽^{k × n}_q is a matrix of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q}
 then C is an [n,k]_q linear code -/
 lemma GeneratorImpliesSubspace {G : Matrix (Fin k) (Fin n) F} :
-    ∃ (C : LinearCode F n), GeneratorMatrix G = C := by sorry
+    Matrix.rank G = k → ∃ C : LinearCode F n, (GeneratorMatrix G = C) ∧ (dim C = k) := by sorry
 
 /-- If C is an [n,k]_q linear code then there is a matrix H ∈ 𝔽^{(n-k) × n}_q
 of rank n-k satisfying C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} -/
 lemma SubspaceImpliesParityCheck {C : LinearCode F n} :
-    ∃ (H : Matrix (Fin m) (Fin n) F), ParityCheckMatrix H = C := by sorry
+    ∃ m : ℕ, (n - m ≤ n) ∧ (m ≤ n) ∧ (dim C = n - m) ∧
+    ∃ H : Matrix (Fin m) (Fin n) F, (ParityCheckMatrix H = C) ∧ (Matrix.rank H = m) := by sorry
 
 /-- If H ∈ 𝔽^{(n-k) × n}_q is a matrix of rank n-k satisfying
 C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} then C is an [n,k]_q linear code-/
 lemma ParityCheckImpliesSubspace {H : Matrix (Fin m) (Fin n) F} :
-    ∃ (C : LinearCode F n), ParityCheckMatrix H = C := by sorry
+    Matrix.rank H = m → ∃ C : LinearCode F n, (ParityCheckMatrix H = C) ∧ (dim C = n-m) := by sorry
 
 end LinearCode
 
