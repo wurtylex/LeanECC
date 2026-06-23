@@ -4,7 +4,7 @@
     \uses{def:LC_subspace,def:GeneratorMatrix}
     \label{lemma:subspace-imp-generator}
     Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a $k \times n$ matrix $G$ with rank $k$ over $\mathbb{F}_q$ such that
+    Then there exists a $k \times n$ matrix $G$ over $\mathbb{F}_q$ such that
     \[
         C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
     \]
@@ -52,8 +52,8 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$.
 \begin{lemma}[Subspace implies Parity Check]
     \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
     \label{lemma:subspace-imp-parity-check}
-    Let $C$ be a linear code of dimension $k$ that is a subspace of $\mathbb{F}^{n}_{q}$.
-    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ such that
+    Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ such that
     \[
         C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
     \]
