@@ -60,7 +60,7 @@ lemma subspaceImpliesGenerator {C : LinearCode F n} :
 /-- If G ∈ 𝔽^{k × n}_q is a matrix of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q}
 then C is an [n,k]_q linear code -/
 lemma generatorImpliesSubspace {G : Matrix (Fin k) (Fin n) F} :
-    Matrix.rank G = k → ∃ C : LinearCode F n, (GeneratorMatrix G = C) ∧ (dim C = k) := by sorry
+    Matrix.rank G = k → ∃ C : LinearCode F n, ((GeneratorMatrix G) = C) ∧ ((dim C) = k):= by sorry
 
 /-- If C is an [n,k]_q linear code then there is a matrix H ∈ 𝔽^{(n-k) × n}_q
 of rank n-k satisfying C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} -/
