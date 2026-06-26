@@ -53,13 +53,13 @@ def ParityCheckMatrix {m : ℕ} (H : Matrix (Fin m) (Fin n) F) : LinearCode F n 
 
 /-- If C is an [n,k]_q linear code then there is a matrix G ∈ 𝔽^{k × n}_q
 of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q} -/
-lemma SubspaceImpliesGenerator {C : LinearCode F n} :
+lemma subspaceImpliesGenerator {C : LinearCode F n} :
     ∃ k : ℕ, (k ≤ n) ∧ (dim C = k) ∧
     ∃ G : Matrix (Fin k) (Fin n) F, (GeneratorMatrix G = C) ∧ (Matrix.rank G = k) := by sorry
 
 /-- If G ∈ 𝔽^{k × n}_q is a matrix of rank k satisfying C = {x · G ∣ x ∈ 𝔽^k_q}
 then C is an [n,k]_q linear code -/
-lemma GeneratorImpliesSubspace {G : Matrix (Fin k) (Fin n) F} :
+lemma generatorImpliesSubspace {G : Matrix (Fin k) (Fin n) F} :
     Matrix.rank G = k → ∃ C : LinearCode F n, (GeneratorMatrix G = C) ∧ (dim C = k) := by sorry
 
 /-- If C is an [n,k]_q linear code then there is a matrix H ∈ 𝔽^{(n-k) × n}_q
@@ -70,7 +70,7 @@ lemma subspaceImpliesParityCheck {C : LinearCode F n} :
 
 /-- If H ∈ 𝔽^{(n-k) × n}_q is a matrix of rank n-k satisfying
 C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} then C is an [n,k]_q linear code-/
-lemma ParityCheckImpliesSubspace {H : Matrix (Fin m) (Fin n) F} :
+lemma parityCheckImpliesSubspace {H : Matrix (Fin m) (Fin n) F} :
     Matrix.rank H = m → ∃ C : LinearCode F n, (ParityCheckMatrix H = C) ∧ (dim C = n-m) := by sorry
 
 end LinearCode
