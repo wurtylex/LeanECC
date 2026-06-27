@@ -13,6 +13,7 @@ public import Mathlib.Data.Fintype.Card
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.InformationTheory.Hamming
 public import Mathlib.Data.ENat.Lattice
+public import Mathlib.Data.ENNReal.Basic
 public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 /-!
@@ -23,6 +24,7 @@ In this file we define #TODO
 -/
 
 @[expose] public section
+open scoped ENNReal
 
 variable (α : Type*) [Fintype α] [DecidableEq α] (n : ℕ)
 
@@ -49,6 +51,10 @@ noncomputable def rate (C : Code α n) : ℝ := C.dim / n
 /-- Minimum distance is hamming distance -/
 noncomputable def minDist (C : Code α n) : ℕ∞ :=
   ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
+
+/-- Relative minimum distiance is minimmum distnace / n -/
+noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
+  (C.minDist : ℝ≥0∞) / (n : ℝ≥0∞)
 
 /-- The Hamming ball of radius `e` centered at `x`: all words within Hamming distance `e` of `x`. -/
 def hammingBall (x : Fin n → α) (e : ℕ) : Set (Fin n → α) :=

@@ -57,6 +57,9 @@ Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
 
 \begin{definition}[Relative Minimum Distance]
   \label{def:RelMinDim}
+  \lean{Code.relMinDist}
+  \leanok
+  \uses{def:MinDim}
   Let $C \subseteq \Sigma^{n}$.
   The minimum distance of $C$, denoted $\delta(C)$, is defined to be
   \[\delta(C) = \min_{\mathbf{c_{1}} \neq \mathbf{c_{2}} \in C} \delta(\mathbf{c_{1}}, \mathbf{c_{2}}).\]
