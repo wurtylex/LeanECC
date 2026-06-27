@@ -100,16 +100,6 @@ omit [DecidableEq α] in
 lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
 
-/-- The q-ary entropy function H_q(p) = p·log_q(q-1) - p·log_q(p) - (1-p)·log_q(1-p).
-Thin wrapper around `Real.qaryEntropy`, converting from nats to log-base-q. -/
-noncomputable def qaryEntropy (q : ℕ) (p : ℝ) : ℝ :=
-  Real.qaryEntropy q p / Real.log q
-
-/-- Unfold `Code.qaryEntropy` to the Mathlib nat-log form. -/
-@[simp]
-lemma qaryEntropy_eq_div (q : ℕ) (p : ℝ) :
-    qaryEntropy q p = Real.qaryEntropy q p / Real.log q := rfl
-
 end Code
 
 end -- close @[expose] public section
