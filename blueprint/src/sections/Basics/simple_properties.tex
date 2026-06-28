@@ -36,7 +36,7 @@
 
 \begin{lemma}[Volume entropy bound]
 \label{lemma:VolEntropy}
-\uses{def:q, def:Vol, def:qentropy}
+\uses{def:q, def:Vol}
 Let $q \geq 2$ and $n \geq 1$ be integers, and let $r$ be an integer with $0 \leq r$ and $\frac{r}{n} \leq 1 - \frac{1}{q}$. Then
 \[
   \Vol_q(r, n) \leq q^{\,n H_q(r/n)}.
@@ -56,13 +56,4 @@ Let $q \geq 2$ and $n \geq 1$ be integers, and let $r$ be an integer with $0 \le
     \Vol_q(r,n)\,(q-1)^{-r}\lambda^{r}(1-\lambda)^{n-r} \leq \sum_{i=0}^{n}\binom{n}{i} \lambda^{i}(1-\lambda)^{n-i} = (\lambda + (1-\lambda))^{n} = 1,
   \]
   the last step by the binomial theorem. Rearranging gives $\Vol_q(r,n) \leq q^{n H_q(\lambda)}$.
-\end{proof}
-
-\begin{lemma}[Monotonicity of $H_q$]
-\label{lemma:HqMono}
-\uses{def:q, def:qentropy}
-Let $q \geq 2$ be an integer. Then $H_q$ is nondecreasing on $[0, 1 - \frac{1}{q}]$.
-\end{lemma}
-\begin{proof}
-  This is obvious, we can write this later.
 \end{proof}
