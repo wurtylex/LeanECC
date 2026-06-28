@@ -77,7 +77,7 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
-/-- Lemma 12 (Volume Entropy Bound): Vol_q(n,r) ≤ q^(n·H_q(r/n)), where H_q is the q-ary
+/-- The volume entropy bound: Vol_q(n,r) ≤ q^(n·H_q(r/n)), where H_q is the q-ary
 entropy function (`Real.qaryEntropy q p / Real.log q` converts from nats to log base q). -/
 lemma hammingVolume_le_pow_mul_entropy (q n r : ℕ)
     (hq : 2 ≤ q) (hn : 1 ≤ n) (hr : (r : ℝ) / n ≤ 1 - 1 / q) :
