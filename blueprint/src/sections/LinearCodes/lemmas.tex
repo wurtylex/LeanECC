@@ -63,10 +63,10 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
     Suppose we take the orthogonal compliment of $C$, $C^{\perp}\subseteq \mathbb{F}^{n}_{q}$. This gives us that
     \begin{itemize}
         \item $dim(C^{\perp})=n-dim(C)=n-k$
-        \item From subspace-imp-generator, we know that we can get some $H\in \mathbb{F}^{n-k \times n}_{q}$ such that
+        \item From Lemma~\ref{lemma:subspace-imp-generator}, we know that we can get some $H\in \mathbb{F}^{n-k \times n}_{q}$ such that
     \[C^{\perp} = \{\mathbf{f}H \mid \mathbf{f} \in \mathbb{F}^{n-k}_{q}\}\]
-        \item And that from subspace-imp-generator the rows of $H$ are in $C^{\perp}$
-        \item From subspace-imp-generator, we get generator $G$ for $C$, where $G$'s rows are all basis elements and therefore elements of $C$
+        \item And that from Lemma~\ref{lemma:subspace-imp-generator} the rows of $H$ are in $C^{\perp}$
+        \item From Lemma~\ref{lemma:subspace-imp-generator}, we get generator $G$ for $C$, where $G$'s rows are all basis elements and therefore elements of $C$
     \end{itemize}
     This means that $HG^T$ is the zero matrix since every element is the dot product of some element of $C$ and $C^{\perp}$. This gives us that
     \[ \forall \mathbf{f}\in \mathbb{F}^n_q, HG^Tf^T = H(\mathbf{f}G)^T = \vec{0}\]
@@ -79,7 +79,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         \item $dim({F}^{n}_{q})=n$
         \item $dim(C)=k$
     \end{itemize}
-    We can assert that the rank of $H$ is $n-k$ because subspace-imp-generator stipulates that $H$ has full rank. From here we can use the rank-nullity theorem to say that, since $C'$ represents the null space of $H$
+    We can assert that the rank of $H$ is $n-k$ because Lemma~\ref{lemma:subspace-imp-generator} stipulates that $H$ has full rank. From here we can use the rank-nullity theorem to say that, since $C'$ represents the null space of $H$
     \[dim(C')+rank(H)=dim({F}^{n}_{q})\]
     \[\implies dim(C') + n-k = n\]
     \[\implies dim(C') = k\]
