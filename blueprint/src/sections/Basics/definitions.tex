@@ -76,12 +76,9 @@ Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
 \end{definition}
 
 \begin{definition}[Maximal Wth Respect to Inclusion]
-  \label{def:Vol}
-  \lean{Code.maximalWrtInclusion}
-  \leanok
-  \uses{def:HammingBall}
-  \uses{def:Code, def:q, def:dim, def:minDist}
-  Let $C$ be a code over alphabet $q$ with block length $n$ and minimum distance $d$.
+  \label{def:maximalWrtInclusion}
+  \uses{def:Code, def:q, def:minDist}
+  Let $C\subseteq \Sigma^{n}$ with minimum distance denoted $\Delta{C}$.
   $C$ is defined to be maximal with respect to inclusion if:
-  $C'$ being an code over alphabet $q$ with block length $n$ and minimum distance $d$ $\implies$ $\lvert C'\rvert\leq \lvert C\rvert$
+  \[\forall C' \subseteq \Sigma^{n}, \Delta{C} = \Delta{C'} \implies$ \lvert C'\rvert\leq \lvert C\rvert\]
 \end{definition}
