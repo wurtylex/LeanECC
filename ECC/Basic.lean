@@ -116,7 +116,7 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 
 /-- Maximal Wrt Inclusion if a containing code with same min dist isn't bigger -/
 def maximalWrtInclusion (C : Code α n) : Prop :=
-  ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D.ncard ≤ C.ncard
+  ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
 end Code
 
