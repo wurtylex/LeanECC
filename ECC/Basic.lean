@@ -114,6 +114,10 @@ omit [DecidableEq α] in
 lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
 
+/-- Maximal Wrt Inclusion if and other code with same min dist isn't bigger -/
+def maximalWrtInclusion (C : Code α n) : Prop :=
+  ∀ D : Code α n, (C.minDist = D.minDist) → D.ncard ≤ C.ncard
+
 end Code
 
 end -- close @[expose] public section
