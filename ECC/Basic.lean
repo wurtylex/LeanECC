@@ -42,6 +42,10 @@ def toSet (C : Code α n) : Set (Fin n → α) := C
 instance : Membership (Fin n → α) (Code α n) :=
   ⟨fun C c => c ∈ C.toSet⟩
 
+/-- Subset using membership -/
+instance : HasSubset (Code α n) :=
+  ⟨fun C D => ∀ c ∈ C, c ∈ D⟩
+
 /-- The dimension of the code C, is log_q(|C|) -/
 noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
 
