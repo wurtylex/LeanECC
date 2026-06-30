@@ -42,6 +42,10 @@ def toSet (C : Code α n) : Set (Fin n → α) := C
 instance : Membership (Fin n → α) (Code α n) :=
   ⟨fun C c => c ∈ C.toSet⟩
 
+/-- Subset using membership -/
+instance : HasSubset (Code α n) :=
+  ⟨fun C D => ∀ c ∈ C, c ∈ D⟩
+
 /-- The dimension of the code C, is log_q(|C|) -/
 noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
 
@@ -113,6 +117,10 @@ omit [DecidableEq α] in
 /-- Rate is at most 1 -/
 lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
   div_le_one_of_le₀ C.dim_le_n (by positivity)
+
+/-- Maximal Wrt Inclusion if a containing code with same min dist isn't bigger -/
+def maximalWrtInclusion (C : Code α n) : Prop :=
+  ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
 end Code
 
