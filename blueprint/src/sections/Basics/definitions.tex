@@ -25,7 +25,7 @@ Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
     \]
     where $q$ is the alphabet size and $\lvert C\rvert$ is the number of codewords.
 \end{definition}
- 
+
 \begin{definition}[Rate]
     \label{def:rate}
     \lean{Code.rate}
@@ -73,4 +73,12 @@ Typically, we will use $q$ to denote the alphabet size $|\Sigma|$.
   \uses{def:HammingBall}
   \[V_{q}(n,r) = \sum^{r}_{i = 0} \binom{n}{i}(q-1)^{i}\]
   where $r$ is the radius.
+\end{definition}
+
+\begin{definition}[Maximal Wth Respect to Inclusion]
+  \label{def:maximalWrtInclusion}
+  \uses{def:Code, def:q, def:minDist}
+  Let $C\subseteq \Sigma^{n}$ with minimum distance denoted $\Delta(C)$.
+  $C$ is defined to be maximal with respect to inclusion if:
+  \[\forall C' \subseteq \Sigma^{n}, \Delta(C) = \Delta(C') \implies \lvert C'\rvert\leq \lvert C\rvert\]
 \end{definition}
