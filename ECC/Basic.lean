@@ -122,6 +122,10 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
+lemma covers (d n : ℕ) (C : Code α n) :
+  n ≥ 1 ∧ d ≥ 1 ∧ C.maximalWrtInclusion ∧ C.minDist = d →
+  (⋃ x ∈ C, (hammingBall α n x (d-1))).ncard = (q α)^n := by sorry
+
 end Code
 
 end -- close @[expose] public section
