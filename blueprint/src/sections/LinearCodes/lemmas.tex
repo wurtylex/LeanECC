@@ -31,8 +31,8 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
 
 \begin{proof}
     First of all, we know $C\subseteq \mathbb{F}^{n}_{q}$
-        because $\forall c\in C$, $G$ constrains $c$ to be $n$ dimensional.
-        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $c\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+        because $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional.
+        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
     \begin{itemize}
         \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$.
         \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
@@ -94,7 +94,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
 \end{lemma}
 
 \begin{proof}
-Because every $c\in C$ is defined as being in $\mathbb{F}^{n}_{q}$, $C \subseteq \mathbb{F}^{n}_{q}$. It should then be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+Because every $\mathbf{c}\in C$ is defined as being in $\mathbb{F}^{n}_{q}$, $C \subseteq \mathbb{F}^{n}_{q}$. It should then be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
 \begin{itemize}
     \item The zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
     \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$, meaning $Ha^T+Hb^T= 0+0 = 0$
