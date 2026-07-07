@@ -35,18 +35,18 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
     \begin{itemize}
         \item We can show that the zero vector $\mathbf{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\mathbf{0}G=\mathbf{0}$.
-        \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
-            $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$,
-            distributivity of matrix multiplication gives us $a+b=xG+yG=(x+y)G$,
-            and since $x+y\in \mathbb{F}^{k}_{q}$ because of closure under addition,
-            $a+b=(x+y)G\in C $
-        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
-            $\exists x\in \mathbb{F}^{k}_{q}$ such that $a=xG$.
-            And therefore, $\forall d\in \mathbb{F}_{q}, da=dxG=(dx)G$.
-            And since $dx\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(xG)\in C$
+        \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C$,
+            $\exists \mathbf{x},\mathbf{y}\in \mathbb{F}^{k}_{q}$ such that $\mathbf{a}=\mathbf{x}G,\mathbf{b}=\mathbf{y}G$,
+            distributivity of matrix multiplication gives us $\mathbf{a}+\mathbf{b}=\mathbf{x}G+\mathbf{y}G=(\mathbf{x}+\mathbf{y})G$,
+            and since $\mathbf{x}+\mathbf{y}\in \mathbb{F}^{k}_{q}$ because of closure under addition,
+            $\mathbf{a}+\mathbf{b}=(\mathbf{x}+\mathbf{y})G\in C $
+        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall \mathbf{a}\in C$ that
+            $\exists \mathbf{x}\in \mathbb{F}^{k}_{q}$ such that $\mathbf{a}=\mathbf{x}G$.
+            And therefore, $\forall d\in \mathbb{F}_{q}, d\mathbf{a}=d\mathbf{x}G=(d\mathbf{x})G$.
+            And since $d\mathbf{x}\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(\mathbf{x}G)\in C$
         These three conditions should be sufficient to prove that $C$ is a valid vector space.
     \end{itemize}
-    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$, and because $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of linearly independent $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$, it follows that $dim(C)=k$
+    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$, and because $\{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of linearly independent $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$, it follows that $dim(C)=k$
 \end{proof}
 
 \begin{lemma}[Subspace implies Parity Check]
