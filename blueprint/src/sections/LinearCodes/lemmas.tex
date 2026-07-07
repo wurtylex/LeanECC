@@ -69,9 +69,9 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         \item From Lemma~\ref{lemma:subspace-imp-generator}, we get generator $G$ for $C$, where $G$'s rows are all basis elements and therefore elements of $C$
     \end{itemize}
     This means that $HG^T$ is the zero matrix since every element is the dot product of some element of $C$ and $C^{\perp}$. This gives us that
-    \[ \forall \mathbf{f}\in \mathbb{F}^n_q, HG^Tf^T = H(\mathbf{f}G)^T = \vec{0}\]
+    \[ \forall \mathbf{f}\in \mathbb{F}^k_q, HG^Tf^T = H(\mathbf{f}G)^T = \vec{0}\]
     And by our definition of generator matrix
-    \[\forall c \in C, \exists f\in \mathbb{F}^n_q, \mathbf{f}G \in C\]
+    \[\forall c \in C, \exists f\in \mathbb{F}^k_q, \mathbf{f}G \in C\]
     \[\implies \forall c \in C, Hc^T = H(\mathbf{f}G)^T = \vec{0}\]
     \[\implies C \subseteq \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}\]
     To make notation easier, let's say this $H$ generated subspace (we know it's a subspace because of Parity Check Implies subspace below) is $C'$. We know that
