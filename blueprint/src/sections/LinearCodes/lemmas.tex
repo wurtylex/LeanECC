@@ -34,7 +34,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         because $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional.
         Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
     \begin{itemize}
-        \item We can show that the zero vector $\vec{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\vec{0}G=\vec{0}$.
+        \item We can show that the zero vector $\mathbf{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\mathbf{0}G=\mathbf{0}$.
         \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C$,
             $\exists x,y\in \mathbb{F}^{k}_{q}$ such that $a=xG,b=yG$,
             distributivity of matrix multiplication gives us $a+b=xG+yG=(x+y)G$,
@@ -69,10 +69,10 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         \item From Lemma~\ref{lemma:subspace-imp-generator}, we get generator $G$ for $C$, where $G$'s rows are all basis elements and therefore elements of $C$
     \end{itemize}
     This means that $HG^T$ is the zero matrix since every element is the dot product of some element of $C$ and $C^{\perp}$. This gives us that
-    \[ \forall \mathbf{f}\in \mathbb{F}^k_q, HG^Tf^T = H(\mathbf{f}G)^T = \vec{0}\]
+    \[ \forall \mathbf{f}\in \mathbb{F}^k_q, HG^Tf^T = H(\mathbf{f}G)^T = \mathbf{0}\]
     And by our definition of generator matrix
-    \[\forall \mathbf{c} \in C, \exists f\in \mathbb{F}^k_q, \mathbf{f}G = \mathbf{c}\]
-    \[\implies \forall \mathbf{c} \in C, H\mathbf{c}^T = H(\mathbf{f}G)^T = \vec{0}\]
+    \[\forall \mathbf{c} \in C, \exists \mathbf{f}\in \mathbb{F}^k_q, \mathbf{f}G = \mathbf{c}\]
+    \[\implies \forall \mathbf{c} \in C, H\mathbf{c}^T = H(\mathbf{f}G)^T = \mathbf{0}\]
     \[\implies C \subseteq \{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}\]
     To make notation easier, let's say this subspace (we know it's a subspace because of Parity Check Implies subspace below) is $C'=\{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}$. We know that
     \begin{itemize}
@@ -96,15 +96,15 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
 \begin{proof}
 Because every $\mathbf{c}\in C$ is defined as being in $\mathbb{F}^{n}_{q}$, $C \subseteq \mathbb{F}^{n}_{q}$. It should then be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
 \begin{itemize}
-    \item The zero vector $\vec{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\vec{0}^T=\vec{0}$
-    \item We can show that $C$ is closed under addition by considering that $\forall a,b\in C, Ha^T=Hb^T=0$, meaning $Ha^T+Hb^T= 0+0 = 0$
+    \item The zero vector $\mathbf{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\mathbf{0}^T=\mathbf{0}$
+    \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C, H\mathbf{a}^T=H\mathbf{b}^T=\mathbf{0}$, meaning $H\mathbf{a}^T+H\mathbf{b}^T= \mathbf{0}+\mathbf{0} = \mathbf{0}$
         and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that
-        \[Ha^T+Hb^T = H(a^T+b^T) = H(a+b)^T = 0\]
-        and since $(a+b)\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(a+b)^T = 0$, and $a+b\in C$
-    \item We can show that $C$ is closed under scalar multiplication by considering that $\forall a\in C$ that
-        $Ha^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $Ha^T=0 \implies dHa^T = d*0=0$
-        which $\implies H(da)^T=0$ because we can commute scalars with matrices and vectors,
-        giving us that $da\in C$
+        \[H\mathbf{a}^T+H\mathbf{b}^T = H(\mathbf{a}^T+\mathbf{b}^T) = H(\mathbf{a}+\mathbf{b})^T = \mathbf{0}\]
+        and since $(\mathbf{a}+\mathbf{b})\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(\mathbf{a}+\mathbf{b})^T = \mathbf{0}$, and $\mathbf{a}+\mathbf{b}\in C$
+    \item We can show that $C$ is closed under scalar multiplication by considering that $\forall \mathbf{a}\in C$ that
+        $H\mathbf{a}^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $H\mathbf{a}^T=\mathbf{0} \implies dH\mathbf{a}^T = d*0=\mathbf{0}$
+        which $\implies H(d\mathbf{a})^T=\mathbf{0}$ because we can commute scalars with matrices and vectors,
+        giving us that $d\mathbf{a}\in C$
 \end{itemize}
 These three conditions prove that $C$ is a vector space, and is the kernel of $H$. Using rank-nullity theorem, we can see:
 \[rank(H)+dim(C)=dim(\mathbb{F}^{n}_{q})\]
