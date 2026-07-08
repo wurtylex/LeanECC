@@ -1,0 +1,114 @@
+\section{Lemmas}
+
+\begin{lemma}[Subspace Implies Generator]
+    \uses{def:LC_subspace,def:GeneratorMatrix}
+    \label{lemma:subspace-imp-generator}
+    Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a $k \times n$ matrix $G$ with rank $k$ over $\mathbb{F}_q$ such that
+    \[
+        C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}.
+    \]
+\end{lemma}
+
+\begin{proof}
+Note that $C$ is a $k$-dimensional subspace of $\mathbb{F}_q^n$, and thus has a basis $\{\mathbf{g}_1, \ldots, \mathbf{g}_k\}$.
+Let $G$ be the $k \times n$ matrix whose $i$-th row is $\mathbf{g}_i$.
+For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector product is
+\[
+    \mathbf{f}G = \sum_{i=1}^k f_i \mathbf{g}_i.
+\]
+Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
+Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$.
+We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follows that $rank(G)=k$ since its rows are basis vectors.
+\end{proof}
+
+\begin{lemma}[Generator Implies Subspace]
+    \uses{def:LC_subspace, def:GeneratorMatrix}
+    \label{lemma:generator-imp-subspace}
+    Let $G \in \mathbb{F}^{k \times n}_{q}$ with rank $k$ and let $C = \{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$.
+    Then $C$ is a $k$-dimensional linear code over $\mathbb{F}^{n}_{q}$.
+\end{lemma}
+
+\begin{proof}
+    First of all, we know $C\subseteq \mathbb{F}^{n}_{q}$
+        because $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional.
+        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    \begin{itemize}
+        \item We can show that the zero vector $\mathbf{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\mathbf{0}G=\mathbf{0}$.
+        \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C$,
+            $\exists \mathbf{x},\mathbf{y}\in \mathbb{F}^{k}_{q}$ such that $\mathbf{a}=\mathbf{x}G,\mathbf{b}=\mathbf{y}G$,
+            distributivity of matrix multiplication gives us $\mathbf{a}+\mathbf{b}=\mathbf{x}G+\mathbf{y}G=(\mathbf{x}+\mathbf{y})G$,
+            and since $\mathbf{x}+\mathbf{y}\in \mathbb{F}^{k}_{q}$ because of closure under addition,
+            $\mathbf{a}+\mathbf{b}=(\mathbf{x}+\mathbf{y})G\in C $
+        \item We can show that $C$ is closed under scalar multiplication by considering that $\forall \mathbf{a}\in C$ that
+            $\exists \mathbf{x}\in \mathbb{F}^{k}_{q}$ such that $\mathbf{a}=\mathbf{x}G$.
+            And therefore, $\forall d\in \mathbb{F}_{q}, d\mathbf{a}=d\mathbf{x}G=(d\mathbf{x})G$.
+            And since $d\mathbf{x}\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(\mathbf{x}G)\in C$
+        These three conditions should be sufficient to prove that $C$ is a valid vector space.
+    \end{itemize}
+    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$, and because $\{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of linearly independent $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$, it follows that $dim(C)=k$
+\end{proof}
+
+\begin{lemma}[Subspace implies Parity Check]
+    \uses{def:LC_subspace,def:ParityCheckMatrix,lemma:subspace-imp-generator}
+    \label{lemma:subspace-imp-parity-check}
+    Let $C$ be a linear code that is a $k$-dimensional subspace of $\mathbb{F}^{n}_{q}$.
+    Then there exists a matrix $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ such that
+    \[
+        C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}.
+    \]
+\end{lemma}
+
+\begin{proof}
+    Suppose we take the orthogonal complement of $C$, $C^{\perp}\subseteq \mathbb{F}^{n}_{q}$. This gives us that
+    \begin{itemize}
+        \item $dim(C^{\perp})=n-dim(C)=n-k$
+        \item From Lemma~\ref{lemma:subspace-imp-generator}, we know that we can get some $H\in \mathbb{F}^{n-k \times n}_{q}$ such that
+    \[C^{\perp} = \{\mathbf{f}H \mid \mathbf{f} \in \mathbb{F}^{n-k}_{q}\}\]
+        \item And that from Lemma~\ref{lemma:subspace-imp-generator} the rows of $H$ are in $C^{\perp}$
+        \item From Lemma~\ref{lemma:subspace-imp-generator}, we get generator $G$ for $C$, where $G$'s rows are all basis elements and therefore elements of $C$
+    \end{itemize}
+    This means that $HG^T$ is the zero matrix since every element is the dot product of some element of $C$ and $C^{\perp}$. This gives us that
+    \[ \forall \mathbf{f}\in \mathbb{F}^k_q, HG^T\mathbf{f}^T = H(\mathbf{f}G)^T = \mathbf{0}\]
+    And by our definition of generator matrix
+    \[\forall \mathbf{c} \in C, \exists \mathbf{f}\in \mathbb{F}^k_q, \mathbf{f}G = \mathbf{c}\]
+    \[\implies \forall \mathbf{c} \in C, H\mathbf{c}^T = H(\mathbf{f}G)^T = \mathbf{0}\]
+    \[\implies C \subseteq \{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}\]
+    To make notation easier, let's say this subspace (we know it's a subspace because of Parity Check Implies subspace below) is $C'=\{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}$. We know that
+    \begin{itemize}
+        \item $dim(\mathbb{F}^{n}_{q})=n$
+        \item $dim(C)=k$
+    \end{itemize}
+    We can assert that the rank of $H$ is $n-k$ because Lemma~\ref{lemma:subspace-imp-generator} stipulates that $H$ has full rank. From here we can use the rank-nullity theorem to say that, since $C'$ represents the null space of $H$
+    \[dim(C')+rank(H)=dim(\mathbb{F}^{n}_{q})\]
+    \[\implies dim(C') + n-k = n\]
+    \[\implies dim(C') = k\]
+    and since $dim(C')=dim(C)$ and $C\subseteq C'$, it should follow that $C=C'$
+\end{proof}
+
+\begin{lemma}[Parity Check Implies subspace]
+    \uses{def:LC_subspace, def:ParityCheckMatrix}
+    \label{lemma:parity-check-imp-subspace}
+    Let $H \in \mathbb{F}^{(n-k) \times n}_{q}$ with rank $n-k$ and let $C = \{\mathbf{f} \in \mathbb{F}^{n}_{q} \mid H\mathbf{f}^{\intercal} = \mathbf{0}\}$.
+    Then $C$ is a subspace of $\mathbb{F}^{n}_{q}$ with dimension $k$.
+\end{lemma}
+
+\begin{proof}
+Because every $\mathbf{c}\in C$ is defined as being in $\mathbb{F}^{n}_{q}$, $C \subseteq \mathbb{F}^{n}_{q}$. It should then be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+\begin{itemize}
+    \item The zero vector $\mathbf{0}\in \mathbb{F}^{n-k}_{q}$ is in $C$ because $H\mathbf{0}^T=\mathbf{0}$
+    \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C, H\mathbf{a}^T=H\mathbf{b}^T=\mathbf{0}$, meaning $H\mathbf{a}^T+H\mathbf{b}^T= \mathbf{0}+\mathbf{0} = \mathbf{0}$
+        and therefore by distributivity of matrix multiplication and distributivity of transverses, We have that
+        \[H\mathbf{a}^T+H\mathbf{b}^T = H(\mathbf{a}^T+\mathbf{b}^T) = H(\mathbf{a}+\mathbf{b})^T = \mathbf{0}\]
+        and since $(\mathbf{a}+\mathbf{b})\in \mathbb{F}^{n}_{q}$ by closure of $\mathbb{F}^{n}_{q}$ under addition, $H(\mathbf{a}+\mathbf{b})^T = \mathbf{0}$, and $\mathbf{a}+\mathbf{b}\in C$
+    \item We can show that $C$ is closed under scalar multiplication by considering that $\forall \mathbf{a}\in C$ that
+        $H\mathbf{a}^T=0$, then $\forall d\in \mathbb{F}_{q}$, that $H\mathbf{a}^T=\mathbf{0} \implies dH\mathbf{a}^T = d*0=\mathbf{0}$
+        which $\implies H(d\mathbf{a})^T=\mathbf{0}$ because we can commute scalars with matrices and vectors,
+        giving us that $d\mathbf{a}\in C$
+\end{itemize}
+These three conditions prove that $C$ is a vector space, and is the kernel of $H$. Using rank-nullity theorem, we can see:
+\[rank(H)+dim(C)=dim(\mathbb{F}^{n}_{q})\]
+\[\implies n-k+dim(C)=n\]
+\[\implies dim(C)=k\]
+
+\end{proof}
