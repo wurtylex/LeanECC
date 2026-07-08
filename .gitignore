@@ -20,6 +20,8 @@ blueprint/src/print.log
 blueprint/src/print.out
 blueprint/src/print.synctex.gz
 blueprint/src/print.pdf
+blueprint/src/*.fls
+blueprint/src/*.paux
 
 # bluepritn test files
 blueprint/lean_decls
