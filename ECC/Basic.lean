@@ -88,26 +88,23 @@ lemma hammingVolume_le_pow_mul_entropy (q n r : ℕ)
 omit [DecidableEq α] in
 /-- Dimension of a code is at most its blocklength -/
 lemma dim_le_n (C : Code α n) : C.dim ≤ n := by
-  by_cases hq : 2 ≤ Fintype.card α
-  · -- q ≥ 2
-    have hcard : C.ncard ≤ Fintype.card α^n := by
+  obtain h0 | hpos := Nat.eq_zero_or_pos C.ncard
+  · -- the empty code: `dim C = logb q 0 = 0`
+    simp [dim, h0]
+  obtain hq | hq := Nat.lt_or_ge (Fintype.card α) 2
+  · -- degenerate alphabet: the log base is `0` or `1`, so `dim C = 0`
+    rcases (by omega : Fintype.card α = 0 ∨ Fintype.card α = 1) with h | h <;>
+      simp [dim, q, h]
+  · -- `2 ≤ q`: from `|C| ≤ q ^ n`, take `logb q` of both sides
+    have hq1 : (1 : ℝ) < Fintype.card α := by exact_mod_cast hq
+    have hcard : (C.ncard : ℝ) ≤ (Fintype.card α : ℝ) ^ n := by
       have h := Set.ncard_le_ncard (Set.subset_univ C)
-      rwa [Set.ncard_univ, Nat.card_eq_fintype_card,
-           Fintype.card_fun, Fintype.card_fin] at h
-    unfold Code.dim Code.q
-    rcases Nat.eq_zero_or_pos C.ncard with h0 | hpos
-    · simp [h0]
-    · rw [Real.logb_le_iff_le_rpow (by exact_mod_cast hq) (by exact_mod_cast hpos),
-          Real.rpow_natCast]
-      exact_mod_cast hcard
-  · -- q < 2
-    have hdim : C.dim = 0 := by
-      unfold Code.dim Code.q
-      have : Fintype.card α = 0 ∨ Fintype.card α = 1 := by omega
-      rcases this with h | h <;> rw [h] <;>
-        simp [Real.logb_zero_left, Real.logb_one_left]
-    rw [hdim];
-    positivity
+      simp only [Set.ncard_univ, Nat.card_eq_fintype_card, Fintype.card_fun,
+        Fintype.card_fin] at h
+      exact_mod_cast h
+    calc C.dim ≤ Real.logb (Fintype.card α) ((Fintype.card α : ℝ) ^ n) :=
+          Real.logb_le_logb_of_le hq1 (by exact_mod_cast hpos) hcard
+      _ = n := by rw [Real.logb_pow, Real.logb_self_eq_one hq1, mul_one]
 
 omit [DecidableEq α] in
 /-- Rate is at most 1 -/
