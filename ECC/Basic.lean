@@ -128,9 +128,7 @@ element of C cover the universe-/
 lemma covers
     (d : ℕ)
     (C : Code α n)
-    (h_n_geq_1 : 1 ≤ n)
     (h_d_geq_1 : 1 ≤ d)
-    (h_n_geq_d : d ≤ n)
     (h_C_maximal : C.maximalWrtInclusion)
     (h_C_min_dist : C.minDist = d) :
     (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by sorry
