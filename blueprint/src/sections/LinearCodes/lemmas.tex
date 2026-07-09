@@ -17,7 +17,7 @@ For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector pro
 \[
     \mathbf{f}G = \sum_{i=1}^k f_i \mathbf{g}_i.
 \]
-Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
+Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$. 
 Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$, we must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follows that $rank(G)=k$ since $G$'s rows are basis vectors.
 \end{proof}
 
@@ -29,8 +29,18 @@ Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span eq
 \end{lemma}
 
 \begin{proof}
-    First of all, because $\forall \mathbf{c}\in C$, $G \in \mathbb{F}^{k \times n}_{q}$ constrains $\mathbf{c}$ to be $n$ dimensional and because of a combination of the closure of $\mathbb{F}_q$ under addition and multiplication and the fact of $\mathbf{c}=\mathbf{f}G$ for some $f\in \in \mathbb{F}^{k}_{q}$ meaning all elements of $\mathbf{c}$ are in $\mathbb{F}_q$, $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. 
-    Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    First of all, 
+    \begin{itemize}
+        \item $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional
+        \item A combination of: 
+        \begin{itemize}
+            \item The closure of $\mathbb{F}_q$ under addition and multiplication 
+            \item The fact of $\mathbf{c}=\mathbf{f}G$ for some $f\in \mathbb{F}^{k}_{q}$ 
+        \end{itemize}
+        means all elements of $\mathbf{c}$ are in $\mathbb{F}_q$
+    \end{itemize}
+    This means $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. 
+    Given this, it is sufficient to prove $C$ contains the zero vector and is closed under linear addition and scalar multiplication.
     \begin{itemize}
         \item We can show that the zero vector $\mathbf{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\mathbf{0}G=\mathbf{0}$.
         \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C$,
