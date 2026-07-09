@@ -17,9 +17,8 @@ For any $\mathbf{f} = (f_1, \ldots, f_k) \in \mathbb{F}_q^k$, the row-vector pro
 \[
     \mathbf{f}G = \sum_{i=1}^k f_i \mathbf{g}_i.
 \]
-Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$.
-Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$.
-We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follows that $rank(G)=k$ since its rows are basis vectors.
+Thus $\{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$. 
+Since $\mathbf{g}_{1}, \ldots, \mathbf{g}_{k}$ is a basis of $C$ and the span equals $C$, we must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follows that $rank(G)=k$ since $G$'s rows are basis vectors.
 \end{proof}
 
 \begin{lemma}[Generator Implies Subspace]
@@ -30,9 +29,18 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
 \end{lemma}
 
 \begin{proof}
-    First of all, we know $C\subseteq \mathbb{F}^{n}_{q}$
-        because $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional.
-        Additionally, because of the closure of $\mathbb{F}_q$ under addition and multiplication that $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. Given this, it should be sufficient to prove that $C$ contains the zero vector and is closed under linear addition and scalar multiplication
+    First of all, 
+    \begin{itemize}
+        \item $\forall \mathbf{c}\in C$, $G$ constrains $\mathbf{c}$ to be $n$ dimensional
+        \item A combination of: 
+        \begin{itemize}
+            \item The closure of $\mathbb{F}_q$ under addition and multiplication 
+            \item The fact of $\mathbf{c}=\mathbf{f}G$ for some $f\in \mathbb{F}^{k}_{q}$ 
+        \end{itemize}
+        means all elements of $\mathbf{c}$ are in $\mathbb{F}_q$
+    \end{itemize}
+    This means $\mathbf{c}\in \mathbb{F}^{n}_{q}$ and therefore $C\subseteq \mathbb{F}^{n}_{q}$. 
+    Given this, it is sufficient to prove $C$ contains the zero vector and is closed under linear addition and scalar multiplication.
     \begin{itemize}
         \item We can show that the zero vector $\mathbf{0}\in \mathbb{F}^{n}_{q}$ is in $C$ because $\mathbf{0}G=\mathbf{0}$.
         \item We can show that $C$ is closed under addition by considering that $\forall \mathbf{a},\mathbf{b}\in C$,
@@ -43,10 +51,10 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
         \item We can show that $C$ is closed under scalar multiplication by considering that $\forall \mathbf{a}\in C$ that
             $\exists \mathbf{x}\in \mathbb{F}^{k}_{q}$ such that $\mathbf{a}=\mathbf{x}G$.
             And therefore, $\forall d\in \mathbb{F}_{q}, d\mathbf{a}=d\mathbf{x}G=(d\mathbf{x})G$.
-            And since $d\mathbf{x}\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication it must follow $d(\mathbf{x}G)\in C$
+            And since $d\mathbf{x}\in \mathbb{F}^{k}_{q}$ by its own closure under scalar multiplication, it must follow $d(\mathbf{x}G)\in C$
         These three conditions should be sufficient to prove that $C$ is a valid vector space.
     \end{itemize}
-    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$, and because $\{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of linearly independent $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$, it follows that $dim(C)=k$
+    Therefore $C$ is a subspace of $\mathbb{F}^{n}_{q}$, and because $\{\mathbf{f}G \mid \mathbf{f} \in \mathbb{F}^{k}_{q}\}$ is the set of $\mathbb{F}_q$-linear combinations of linearly independent $\mathbf{g}_{1},\ldots, \mathbf{g}_{k}$, it follows that $dim(C)=k$.
 \end{proof}
 
 \begin{lemma}[Subspace implies Parity Check]
@@ -70,11 +78,11 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
     \end{itemize}
     This means that $HG^T$ is the zero matrix since every element is the dot product of some element of $C$ and $C^{\perp}$. This gives us that
     \[ \forall \mathbf{f}\in \mathbb{F}^k_q, HG^T\mathbf{f}^T = H(\mathbf{f}G)^T = \mathbf{0}\]
-    And by our definition of generator matrix
+    And by our definition of the generator matrix,
     \[\forall \mathbf{c} \in C, \exists \mathbf{f}\in \mathbb{F}^k_q, \mathbf{f}G = \mathbf{c}\]
     \[\implies \forall \mathbf{c} \in C, H\mathbf{c}^T = H(\mathbf{f}G)^T = \mathbf{0}\]
     \[\implies C \subseteq \{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}\]
-    To make notation easier, let's say this subspace (we know it's a subspace because of Parity Check Implies subspace below) is $C'=\{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}$. We know that
+    To make notation easier, let's say this subspace (we know it's a subspace because of Lemma~\ref{lemma:parity-check-imp-subspace} below) is $C'=\{\mathbf{c} \in \mathbb{F}^{n}_{q} \mid H\mathbf{c}^{\intercal} = \mathbf{0}\}$. We know that
     \begin{itemize}
         \item $dim(\mathbb{F}^{n}_{q})=n$
         \item $dim(C)=k$
@@ -83,7 +91,7 @@ We must have $C = \{\mathbf{f}G \mid f \in \mathbb{F}^{k}_{q}\}$. It also follow
     \[dim(C')+rank(H)=dim(\mathbb{F}^{n}_{q})\]
     \[\implies dim(C') + n-k = n\]
     \[\implies dim(C') = k\]
-    and since $dim(C')=dim(C)$ and $C\subseteq C'$, it should follow that $C=C'$
+    and since $dim(C')=dim(C)$ and $C\subseteq C'$, it should follow that $C=C'$.
 \end{proof}
 
 \begin{lemma}[Parity Check Implies subspace]
