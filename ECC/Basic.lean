@@ -122,9 +122,18 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
-lemma covers (d n : ℕ) (C : Code α n) :
-  n ≥ 1 ∧ d ≥ 1 ∧ n ≥ d ∧ C.maximalWrtInclusion ∧ C.minDist = d →
-  (⋃ x ∈ C, (hammingBall α n x (d-1))).ncard = (q α)^n := by sorry
+/-- Given a maximal wrt inclusion code C with distance d,
+the union of hamming balls with radius d-1 around each
+element of C cover the universe-/
+lemma covers
+    (d n : ℕ)
+    (C : Code α n)
+    (h_n_geq_1 : n ≥ 1)
+    (h_d_geq_1 : d ≥ 1)
+    (h_n_geq_d : n ≥ d)
+    (h_C_maximal : C.maximalWrtInclusion)
+    (h_C_min_dist : C.minDist = d) :
+    (⋃ x ∈ C, (hammingBall α n x (d-1))).ncard = (q α)^n := by sorry
 
 end Code
 
