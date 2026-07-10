@@ -27,12 +27,49 @@
     Therefore $R = k/n \leq 1$.
 \end{proof}
 
+\begin{lemma}[Sphere cardinality]
+  \label{lemma:SphereCard}
+  \uses{def:q}
+  For any $\mathbf{x} \in [q]^n$ and integer $i \geq 0$,
+  \[\bigl|\{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}\bigr| = \binom{n}{i}(q-1)^i.\]
+\end{lemma}
+
+\begin{proof}
+  Let $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$, and for
+  $\mathbf{y} \in [q]^n$ set $T(\mathbf{y}) = \{j \in [n] \mid y_j \neq x_j\}$. For
+  $\mathbf{y} \in S_i$:
+  \begin{itemize}
+    \item $|T(\mathbf{y})| = \Delta(\mathbf{x}, \mathbf{y}) = i$;
+    \item $y_j \in [q] \setminus \{x_j\}$ for $j \in T(\mathbf{y})$, and $y_j = x_j$ for
+      $j \notin T(\mathbf{y})$.
+  \end{itemize}
+  Conversely, any $i$-element subset $T \subseteq [n]$ together with any choice of a symbol
+  $y_j \in [q] \setminus \{x_j\}$ for each $j \in T$ (and $y_j = x_j$ elsewhere) yields a
+  distinct word at distance exactly $i$ from $\mathbf{x}$. This gives a bijection between the
+  sphere and these pairs. There are $\binom{n}{i}$ choices of the subset $T$, and for each one
+  $(q-1)^i$ choices of the symbols, so the sphere has $\binom{n}{i}(q-1)^i$ elements.
+\end{proof}
+
 \begin{lemma}[Ball cardinality equals volume]
   \label{lemma:BallCard}
   \uses{def:HammingBall, def:Vol, def:q}
   For any $\mathbf{x} \in [q]^n$ and $r \geq 0$,
   \[|B(\mathbf{x}, r)| = \Vol_q(n, r).\]
 \end{lemma}
+
+\begin{proof}
+  \uses{lemma:SphereCard}
+  For $0 \leq i \leq r$ let $S_i = \{\mathbf{y} \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$.
+  Every word $\mathbf{y}$ has a single Hamming distance to $\mathbf{x}$, so all of the $S_i$ are
+  pairwise disjoint, and since $\Delta(\mathbf{x}, \mathbf{y}) \leq r$ holds iff
+  $\Delta(\mathbf{x}, \mathbf{y}) = i$ for some $0 \leq i \leq r$, we have
+  $B(\mathbf{x}, r) = \bigsqcup_{i=0}^{r} S_i$. Therefore,
+  \[
+    |B(\mathbf{x}, r)| = \sum_{i=0}^{r} |S_i| = \sum_{i=0}^{r} \binom{n}{i}(q-1)^i = \Vol_q(n, r),
+  \]
+  using Lemma~\ref{lemma:SphereCard} for each sphere and the definition of $\Vol_q$ for the
+  last equality.
+\end{proof}
 
 \begin{lemma}[Volume entropy bound]
 \label{lemma:VolEntropy}
