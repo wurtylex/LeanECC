@@ -31,22 +31,11 @@ open scoped ENNReal
 variable (α : Type*) [Fintype α] [DecidableEq α] (n : ℕ)
 
 /-- A code of blocklength n over α is a subset of α^n. -/
-def Code : Type _ := Set (Fin n → α)
+abbrev Code : Type _ := Set (Fin n → α)
 
 namespace Code
 /-- The alphabet size. -/
 def q : ℕ := Fintype.card α
-
-/-- We view Code as a set of its codewords. -/
-def toSet (C : Code α n) : Set (Fin n → α) := C
-
-/-- Membership by unfolding to set -/
-instance : Membership (Fin n → α) (Code α n) :=
-  ⟨fun C c => c ∈ C.toSet⟩
-
-/-- Subset using membership -/
-instance : HasSubset (Code α n) :=
-  ⟨fun C D => ∀ c ∈ C, c ∈ D⟩
 
 /-- The dimension of the code C, is log_q(|C|) -/
 noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
@@ -208,6 +197,31 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
+/-- A code that is a subset of another must always have a greater than or equal min distane -/
+lemma subset_mindist (C D : Code α n) :
+  C ⊆ D → C.minDist ≥ D.minDist := by
+  intro hsub
+  rw[Set.subset_def] at hsub
+  unfold minDist
+  apply le_iInf
+  intro c1
+  apply le_iInf
+  intro hc1_in_C
+  apply le_iInf
+  intro c2
+  apply le_iInf
+  intro hc2_in_C
+  apply le_iInf
+  intro h_neq
+  simp at h_neq
+
+  apply iInf_le_of_le c1
+  simp[hc1_in_C, hsub]
+  apply iInf_le_of_le c2
+  simp[hc2_in_C, hsub]
+  apply iInf_le_of_le h_neq
+  rfl
+
 /-- Given a maximal wrt inclusion code C with minimum distance ≤ d,
 block length n, and d <= n, the union of hamming balls with radius d-1 around each
 element of C cover the universe -/
@@ -216,7 +230,100 @@ lemma covers
     (C : Code α n)
     (h_C_maximal : C.maximalWrtInclusion)
     (h_C_min_dist : C.minDist ≤ d) :
-    (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by sorry
+    (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by
+  by_contra! h
+  have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
+    by_contra! h_card
+    -- 1. Since every element is in the union, the union is the universal set
+    have h_univ : (⋃ x ∈ C, hammingBall α n x (d - 1)) = Set.univ :=
+      Set.eq_univ_of_forall h_card
+    -- 2. Your hypothesis `h` is an `And`. The right side (`h.2`) states the
+    -- cardinality is NOT q^n. Applying it sets our goal to prove it IS q^n.
+    apply h
+    -- 3. Substitute the union for the universal set
+    rw [h_univ, Set.ncard_univ]
+    -- 4. Calculate the cardinality of the function space (Fin n → α)
+    -- This uses the exact same lemmas you successfully used up on line 93!
+    rw [Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin]
+    unfold Code.q
+    rfl
+
+  have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d := by
+    obtain ⟨c, hc⟩ := h_extraneous_elt
+    have h_outside_ball_dist (x : Fin n → α) (h_x_in_C : x ∈ C): d ≤ hammingDist x c := by
+      unfold hammingBall at hc
+      simp at hc
+      grind
+    let D := C ∪ {c}
+    use D
+    have h_D_minDist : minDist α n D = d := by
+      apply le_antisymm
+      · -- Goal: D.minDist ≤ d
+        unfold D
+        rw[← h_C_min_dist]
+        apply subset_mindist
+        simp
+      . -- Goal: D.minDist ≥ d
+        unfold D
+        rw[← h_C_min_dist]
+        unfold minDist
+        -- Pull out elements from the constructed code
+        apply le_iInf
+        intro c1
+        apply le_iInf
+        intro hc1
+        apply le_iInf
+        intro c2
+        apply le_iInf
+        intro hc2
+        apply le_iInf
+        intro h_neq
+        by_cases h_c1_in_C : (c1 ∈ C)
+        . by_cases h_c2_in_C : (c2 ∈ C)
+          . apply iInf_le_of_le c1
+            simp[h_c1_in_C]
+            apply iInf_le_of_le c2
+            simp[h_c2_in_C]
+            apply iInf_le_of_le h_neq
+            rfl
+          . simp[h_c2_in_C] at hc2
+            rw[hc2] at h_neq
+            simp[h_neq] at hc1
+            rw[hc2]
+            rw[← minDist]
+            rw[h_C_min_dist]
+            simp[h_outside_ball_dist c1 hc1]
+        . simp[h_c1_in_C] at hc1
+          rw[hc1] at h_neq
+          simp at hc2
+          symm at h_neq
+          simp[h_neq] at hc2
+          rw[hc1]
+          rw[← minDist]
+          rw[h_C_min_dist]
+          rw[hammingDist_comm]
+          simp[h_outside_ball_dist c2 hc2]
+
+
+    rw[h_D_minDist]
+    simp[D]
+    have h_not_subset : ¬(insert c C ⊆ C) := by
+      intro h_sub
+      have hc_in_C : c ∈ C := h_sub (Set.mem_insert c C)
+      apply hc
+      simp
+      use c
+      simp
+      exact hc_in_C
+    simp[h_not_subset]
+
+  have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
+    unfold maximalWrtInclusion
+    push Not
+    rw[h_C_min_dist]
+    tauto
+
+  simp[h_C_maximal] at h_C_not_maximal
 
 /-- Maximal packing to fill in later -/
 lemma maxPacking (C : Code α n) (d : ℕ)
