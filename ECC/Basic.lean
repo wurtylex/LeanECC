@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Data.Set.Basic
 public import Mathlib.Data.Set.Card
+public import Mathlib.Data.Set.Card.Arithmetic
 public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
@@ -61,6 +62,12 @@ noncomputable def minDist (C : Code α n) : ℕ∞ :=
 noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
   (C.minDist : ℝ≥0∞) / (n : ℝ≥0∞)
 
+omit [Fintype α] in
+/-- The minimum distance of any code is at least 1, since it is an infimum
+over pairs of distinct codewords (and the empty infimum is ⊤). -/
+lemma one_leq_minDist (C : Code α n) : 1 ≤ C.minDist := by
+  simp [minDist, Nat.one_le_iff_ne_zero]
+
 /-- The Hamming ball of radius `e` centered at `x`: all words within Hamming distance `e` of `x`. -/
 def hammingBall (x : Fin n → α) (e : ℕ) : Set (Fin n → α) :=
   {y | hammingDist x y ≤ e}
@@ -81,6 +88,10 @@ lemma hammingVolume_def (q n r : ℕ) :
 
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
+
+/-- A Hamming ball of radius r contains exactly V_q(n,r) words. -/
+lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
+    (hammingBall α n x r).ncard = hammingVolume (q α) n r := by sorry
 
 /-- The volume entropy bound: Vol_q(n,r) ≤ q^(n·H_q(r/n)), where H_q is the q-ary
 entropy function (`Real.qaryEntropy q p / Real.log q` converts from nats to log base q). -/
@@ -199,7 +210,7 @@ def maximalWrtInclusion (C : Code α n) : Prop :=
 
 /-- Given a maximal wrt inclusion code C with minimum distance ≤ d,
 block length n, and d <= n, the union of hamming balls with radius d-1 around each
-element of C cover the universe-/
+element of C cover the universe -/
 lemma covers
     (d : ℕ)
     (C : Code α n)
@@ -207,6 +218,33 @@ lemma covers
     (h_C_min_dist : C.minDist ≤ d) :
     (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by sorry
 
+/-- Maximal packing to fill in later -/
+lemma maxPacking (C : Code α n) (d : ℕ)
+  (h_C_maximal : C.maximalWrtInclusion)
+  (h_C_min_dist : C.minDist = d) :
+  (q α)^n ≤ C.ncard * hammingVolume (q α) n (d - 1) := by
+  have h_d_geq_1 : 1 ≤ d := by
+    have h1 := one_leq_minDist α n C
+    rw [h_C_min_dist] at h1
+    exact_mod_cast h1
+  have hC := Set.toFinite C.toSet
+  calc (q α)^n
+      -- = |∪ x ∈ C, B(x, d-1)|
+      = (⋃ x ∈ C, hammingBall α n x (d - 1)).ncard :=
+        (covers α n d C h_d_geq_1 h_C_maximal h_C_min_dist).symm
+      -- = |⋃ x ∈ C.toFinset, B(x, d-1)|
+    _ = (⋃ x ∈ hC.toFinset, hammingBall α n x (d - 1)).ncard := by
+        simp only [Set.Finite.mem_toFinset]; rfl
+      -- ≤ ∑ x ∈ C, |B(x, d-1)|
+    _ ≤ ∑ x ∈ hC.toFinset, (hammingBall α n x (d - 1)).ncard :=
+        hC.toFinset.set_ncard_biUnion_le _
+      -- = ∑ x ∈ C, Vol_q(n, d-1)
+    _ = ∑ _x ∈ hC.toFinset, hammingVolume (q α) n (d - 1) :=
+        Finset.sum_congr rfl fun x _ => ncard_hammingBall α n x (d - 1)
+      -- = |C| · Vol_q(n, d-1)
+    _ = C.ncard * hammingVolume (q α) n (d - 1) := by
+        rw [Finset.sum_const, smul_eq_mul, ← Set.ncard_eq_toFinset_card _ hC]
+        rfl
 end Code
 
 end -- close @[expose] public section
