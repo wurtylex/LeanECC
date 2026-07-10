@@ -1,6 +1,8 @@
 \begin{lemma}[Covering]
 \label{lemma:covers}
-\uses{def:Code, def:q, def:MinDim, def:Vol}
+\lean{Code.covers}
+\leanok
+\uses{def:Code, def:q, def:MinDim, def:Vol, def:maximalWrtInclusion, def:HammingBall}
 Let $q \geq 2$ and $n \geq d \geq 1$ be integers, and let $C \subseteq [q]^{n}$ be a
 code of minimum distance at least $d$ that is maximal with respect to inclusion.
 For $\mathbf{c} \in C$, let
@@ -24,7 +26,9 @@ Then
 
 \begin{lemma}[Maximal Packing]
 \label{lemma:MaximalPacking}
-\uses{def:Code, def:q, def:MinDim, def:Vol, lemma:covers, lemma:BallCard}
+\lean{Code.maxPacking}
+\leanok
+\uses{def:Code, def:q, def:MinDim, def:Vol, def:maximalWrtInclusion}
 Let $q \geq 2$ and $n \geq d \geq 1$ be integers, and let $C \subseteq [q]^n$ be
 maximal, with respect to inclusion, among all codes of minimum distance at
 least $d$.
@@ -35,6 +39,8 @@ Then
 \end{lemma}
 
 \begin{proof}
+  \leanok
+  \uses{lemma:covers, lemma:BallCard}
   For every codeword $c \in C$ we define a ball $B(\mathbf{c},d-1)$.
   Note that by Lemma~\ref{lemma:covers}, the union of these balls cover $[q]^{n}$.
   Then we must have the following inequality,
