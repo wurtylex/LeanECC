@@ -232,6 +232,14 @@ lemma covers
     (h_C_min_dist : C.minDist ≤ d) :
     (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by
   by_contra! h
+  -- Get the exact min Distance
+  let d_exact := C.minDist
+  have h_C_min_dist_exact : C.minDist = d_exact := by tauto
+  have h_C_min_dist_exact_leq_d : d_exact ≤ d := by
+    rw[← h_C_min_dist_exact]
+    simp[h_C_min_dist]
+
+  -- Prove that we have some extraneous element
   have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
     by_contra! h_card
     -- 1. Since every element is in the union, the union is the universal set
@@ -248,24 +256,29 @@ lemma covers
     unfold Code.q
     rfl
 
-  have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d := by
-    obtain ⟨c, hc⟩ := h_extraneous_elt
-    have h_outside_ball_dist (x : Fin n → α) (h_x_in_C : x ∈ C): d ≤ hammingDist x c := by
-      unfold hammingBall at hc
-      simp at hc
-      grind
+  -- We can create D with the same min distance
+  have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d_exact := by
+    obtain ⟨c, h_c_not_in_union⟩ := h_extraneous_elt
+    -- c must have a hamming distance of at least d from any element of C
+    have h_outside_ball_dist (b : Fin n → α) (h_b_in_C : b ∈ C): d_exact ≤ hammingDist b c := by
+      unfold hammingBall at h_c_not_in_union
+      simp at h_c_not_in_union
+      specialize h_c_not_in_union b h_b_in_C
+      have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
+      exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
     let D := C ∪ {c}
     use D
-    have h_D_minDist : minDist α n D = d := by
+    -- Goal: D has minimum distance d
+    have h_D_minDist : minDist α n D = d_exact := by
       apply le_antisymm
       · -- Goal: D.minDist ≤ d
         unfold D
-        rw[← h_C_min_dist]
+        rw[← h_C_min_dist_exact]
         apply subset_mindist
         simp
       . -- Goal: D.minDist ≥ d
         unfold D
-        rw[← h_C_min_dist]
+        rw[← h_C_min_dist_exact]
         unfold minDist
         -- Pull out elements from the constructed code
         apply le_iInf
@@ -278,6 +291,7 @@ lemma covers
         intro hc2
         apply le_iInf
         intro h_neq
+        -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
         . by_cases h_c2_in_C : (c2 ∈ C)
           . apply iInf_le_of_le c1
@@ -291,7 +305,7 @@ lemma covers
             simp[h_neq] at hc1
             rw[hc2]
             rw[← minDist]
-            rw[h_C_min_dist]
+            rw[h_C_min_dist_exact]
             simp[h_outside_ball_dist c1 hc1]
         . simp[h_c1_in_C] at hc1
           rw[hc1] at h_neq
@@ -300,29 +314,25 @@ lemma covers
           simp[h_neq] at hc2
           rw[hc1]
           rw[← minDist]
-          rw[h_C_min_dist]
+          rw[h_C_min_dist_exact]
           rw[hammingDist_comm]
           simp[h_outside_ball_dist c2 hc2]
-
-
     rw[h_D_minDist]
     simp[D]
-    have h_not_subset : ¬(insert c C ⊆ C) := by
-      intro h_sub
-      have hc_in_C : c ∈ C := h_sub (Set.mem_insert c C)
-      apply hc
-      simp
-      use c
-      simp
-      exact hc_in_C
-    simp[h_not_subset]
+    intro h_insert_c_subset_of_C
+    have hc_in_C : c ∈ C := h_insert_c_subset_of_C (Set.mem_insert c C)
+    apply h_c_not_in_union
+    simp
+    use c
+    simp
+    exact hc_in_C
 
+  -- Therefore C is not maximal
   have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
     unfold maximalWrtInclusion
     push Not
-    rw[h_C_min_dist]
+    rw[h_C_min_dist_exact]
     tauto
-
   simp[h_C_maximal] at h_C_not_maximal
 
 /-- Maximal packing to fill in later -/
