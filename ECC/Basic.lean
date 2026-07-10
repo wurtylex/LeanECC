@@ -197,6 +197,7 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
+omit [Fintype α] in
 /-- A code that is a subset of another must always have a greater than or equal min distance -/
 lemma subset_mindist (C D : Code α n) :
   C ⊆ D → C.minDist ≥ D.minDist := by
