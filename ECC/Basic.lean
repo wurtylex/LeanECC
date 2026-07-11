@@ -15,6 +15,7 @@ public import Mathlib.InformationTheory.Hamming
 public import Mathlib.Data.ENat.Lattice
 public import Mathlib.Data.ENNReal.Basic
 public import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import all Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 /-!
 (Doc String that we happen to need fill this in later)
@@ -87,7 +88,84 @@ lemma hammingVolume_le_pow_mul_entropy (q n r : ℕ)
     (hq : 2 ≤ q) (hn : 1 ≤ n) (hr : (r : ℝ) / n ≤ 1 - 1 / q) :
     (hammingVolume q n r : ℝ) ≤
       (q : ℝ) ^ ((n : ℝ) * Real.qaryEntropy q ((r : ℝ) / n) / Real.log q) := by
-  sorry
+  -- r = 0 then Vol_q(n, 0) = 1
+  obtain rfl | hr0 := Nat.eq_zero_or_pos r
+  · simp
+  -- Let r ≥ 1 implies 0 < λ ≤ 1 - 1/q < 1
+  set l : ℝ := (r : ℝ) / n with hl
+  have hn0 : (0 : ℝ) < n := by exact_mod_cast hn
+  have hq0 : (0 : ℝ) < q := by positivity
+  have hl0 : 0 < l := div_pos (by exact_mod_cast hr0) hn0
+  have hl1 : l < 1 := hr.trans_lt (sub_lt_self 1 (by positivity))
+  have h1l : 0 < 1 - l := sub_pos.mpr hl1
+  have hql : (0 : ℝ) < (q : ℝ) - 1 := sub_pos.mpr (by exact_mod_cast hq)
+  have hrn : r < n := by exact_mod_cast (div_lt_one hn0).mp hl1
+  -- Since n * λ = r, the definition of H_q gives
+  -- n * H_q(λ) = r * log (q-1) + r * log λ⁻¹ + (n-r) * log (1-λ)⁻¹
+  have hnl : (n : ℝ) * l = r := by rw [hl, mul_comm, div_mul_cancel₀ _ hn0.ne']
+  have hent : (n : ℝ) * Real.qaryEntropy q l
+      = (r : ℝ) * Real.log ((q : ℝ) - 1)
+        + ((r : ℝ) * Real.log l⁻¹ + ((n - r : ℕ) : ℝ) * Real.log (1 - l)⁻¹) := by
+    simp only [Real.qaryEntropy, Real.binEntropy]
+    push_cast [Nat.cast_sub hrn.le]
+    rw [← hnl]
+    ring
+  -- since q > 1, q ^ (x / log q) = exp x
+  have hexp : (q : ℝ) ^ ((n : ℝ) * Real.qaryEntropy q l / Real.log q)
+      = Real.exp ((n : ℝ) * Real.qaryEntropy q l) := by
+    rw [Real.rpow_def_of_pos hq0, mul_comm (Real.log _),
+      div_mul_cancel₀ _ (Real.log_pos (by exact_mod_cast hq)).ne']
+  -- so exponentiating gives q ^ (n * H_q(λ) / log q) = (q-1)^r / (λ^r * (1-λ)^(n-r))
+  have hRHS : Real.exp ((n : ℝ) * Real.qaryEntropy q l)
+      = ((q : ℝ) - 1) ^ r / (l ^ r * (1 - l) ^ (n - r)) := by
+    rw [hent, Real.exp_add, Real.exp_add, Real.exp_nat_mul, Real.exp_nat_mul,
+      Real.exp_nat_mul, Real.exp_log hql, Real.exp_log (inv_pos.mpr hl0),
+      Real.exp_log (inv_pos.mpr h1l), inv_pow, inv_pow, ← mul_inv, ← div_eq_mul_inv]
+  -- and it suffices to show Vol_q(n,r) * λ^r * (1-λ)^(n-r) ≤ (q-1)^r.
+  rw [hexp, hRHS, le_div_iff₀ (by positivity)]
+  -- θ ≤ 1 where θ = λ / ((q-1)(1-λ))
+  -- λ ≤ (q-1)(1-λ)
+  have htheta : l ≤ ((q : ℝ) - 1) * (1 - l) := by
+    have h : l * q ≤ (q : ℝ) - 1 :=
+      calc l * q ≤ (1 - 1 / (q : ℝ)) * q := mul_le_mul_of_nonneg_right hr hq0.le
+        _ = q - 1 := by field_simp
+    calc l = l * q - l * ((q : ℝ) - 1) := by ring
+      _ ≤ ((q : ℝ) - 1) - l * ((q : ℝ) - 1) := sub_le_sub_right h _
+      _ = ((q : ℝ) - 1) * (1 - l) := by ring
+  -- ∑_{i=0}^n C(n,i) λ^i (1-λ)^(n-i) = (λ + (1-λ))^n = 1
+  have hbinom :
+      ∑ i ∈ Finset.range (n + 1), l ^ i * (1 - l) ^ (n - i) * (n.choose i : ℝ) = 1 := by
+    rw [← add_pow, add_sub_cancel, one_pow]
+  calc (hammingVolume q n r : ℝ) * (l ^ r * (1 - l) ^ (n - r))
+      = ∑ i ∈ Finset.range (r + 1),
+          (n.choose i : ℝ) * ((q : ℝ) - 1) ^ i * (l ^ r * (1 - l) ^ (n - r)) := by
+        rw [hammingVolume_def]
+        push_cast [Nat.cast_sub (show 1 ≤ q by omega)]
+        rw [Finset.sum_mul]
+    -- for each 0 ≤ i ≤ r, since r - i ≥ 0 and θ ≤ 1,
+    -- C(n,i) (q-1)^i λ^r (1-λ)^(n-r) ≤ (q-1)^r C(n,i) λ^i (1-λ)^(n-i)
+    _ ≤ ∑ i ∈ Finset.range (r + 1),
+          ((q : ℝ) - 1) ^ r * (l ^ i * (1 - l) ^ (n - i) * (n.choose i : ℝ)) := by
+        refine Finset.sum_le_sum fun i hi ↦ ?_
+        have hir : i ≤ r := Finset.mem_range_succ_iff.mp hi
+        have h1 : l ^ r = l ^ i * l ^ (r - i) := by rw [← pow_add]; congr 1; omega
+        have h2 : (1 - l) ^ (n - i) = (1 - l) ^ (n - r) * (1 - l) ^ (r - i) := by
+          rw [← pow_add]; congr 1; omega
+        have h3 : ((q : ℝ) - 1) ^ r = ((q : ℝ) - 1) ^ i * ((q : ℝ) - 1) ^ (r - i) := by
+          rw [← pow_add]; congr 1; omega
+        calc (n.choose i : ℝ) * ((q : ℝ) - 1) ^ i * (l ^ r * (1 - l) ^ (n - r))
+            = (n.choose i : ℝ) * ((q : ℝ) - 1) ^ i * (l ^ i * (1 - l) ^ (n - r))
+                * l ^ (r - i) := by rw [h1]; ring
+          _ ≤ (n.choose i : ℝ) * ((q : ℝ) - 1) ^ i * (l ^ i * (1 - l) ^ (n - r))
+                * (((q : ℝ) - 1) * (1 - l)) ^ (r - i) := by gcongr
+          _ = ((q : ℝ) - 1) ^ r * (l ^ i * (1 - l) ^ (n - i) * (n.choose i : ℝ)) := by
+              rw [h2, h3, mul_pow]; ring
+    -- summing over 0 ≤ i ≤ r and extending the sum to 0 ≤ i ≤ n
+    _ ≤ ∑ i ∈ Finset.range (n + 1),
+          ((q : ℝ) - 1) ^ r * (l ^ i * (1 - l) ^ (n - i) * (n.choose i : ℝ)) :=
+        Finset.sum_le_sum_of_subset_of_nonneg
+          (Finset.range_subset_range.mpr (Nat.succ_le_succ hrn.le)) fun i _ _ ↦ by positivity
+    _ = ((q : ℝ) - 1) ^ r := by rw [← Finset.mul_sum, hbinom, mul_one]
 
 omit [DecidableEq α] in
 /-- Dimension of a code is at most its blocklength -/
