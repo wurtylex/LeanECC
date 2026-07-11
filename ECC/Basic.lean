@@ -31,11 +31,22 @@ open scoped ENNReal
 variable (α : Type*) [Fintype α] [DecidableEq α] (n : ℕ)
 
 /-- A code of blocklength n over α is a subset of α^n. -/
-abbrev Code : Type _ := Set (Fin n → α)
+@[simp] def Code : Type _ := Set (Fin n → α)
 
 namespace Code
 /-- The alphabet size. -/
 def q : ℕ := Fintype.card α
+
+/-- We view Code as a set of its codewords. -/
+def toSet (C : Code α n) : Set (Fin n → α) := C
+
+/-- Membership by unfolding to set -/
+@[simp] instance : Membership (Fin n → α) (Code α n) :=
+  ⟨fun C c => c ∈ C.toSet⟩
+
+/-- Subset using membership -/
+@[simp] instance : HasSubset (Code α n) :=
+  ⟨fun C D => ∀ c ∈ C, c ∈ D⟩
 
 /-- The dimension of the code C, is log_q(|C|) -/
 noncomputable def dim (C : Code α n) : ℝ := Real.logb (q α) C.ncard
@@ -202,7 +213,8 @@ omit [Fintype α] in
 lemma subset_mindist (C D : Code α n) :
   C ⊆ D → C.minDist ≥ D.minDist := by
   intro hsub
-  rw[Set.subset_def] at hsub
+  change ∀ x ∈ C, x ∈ D at hsub
+  -- Unfold the definition of minimum distance into variables
   unfold minDist
   apply le_iInf
   intro c1
@@ -214,12 +226,11 @@ lemma subset_mindist (C D : Code α n) :
   intro hc2_in_C
   apply le_iInf
   intro h_neq
-  simp at h_neq
-
+  -- Repack everything
   apply iInf_le_of_le c1
-  simp[hc1_in_C, hsub]
+  apply iInf_le_of_le (hsub c1 hc1_in_C)
   apply iInf_le_of_le c2
-  simp[hc2_in_C, hsub]
+  apply iInf_le_of_le (hsub c2 hc2_in_C)
   apply iInf_le_of_le h_neq
   rfl
 
