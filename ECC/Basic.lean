@@ -279,8 +279,8 @@ lemma covers
         rw[← h_C_min_dist_exact]
         apply subset_mindist
         simp
-        tauto
-      . -- Goal: D.minDist ≥ d
+        tauto.
+      · -- Goal: D.minDist ≥ d
         unfold D
         rw[← h_C_min_dist_exact]
         unfold minDist
@@ -291,21 +291,21 @@ lemma covers
         simp at hc2
         -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
-        . by_cases h_c2_in_C : (c2 ∈ C)
-          . apply iInf_le_of_le c1
+        · by_cases h_c2_in_C : (c2 ∈ C)
+          · apply iInf_le_of_le c1
             apply iInf_le_of_le h_c1_in_C
             apply iInf_le_of_le c2
             apply iInf_le_of_le h_c2_in_C
             apply iInf_le_of_le h_neq
             rfl
-          . have h_c2_eq_c : c2 = c := by
+          · have h_c2_eq_c : c2 = c := by
               have h_or := Set.mem_insert_iff.mp hc2
               tauto
             rw[h_c2_eq_c]
             rw[← minDist]
             rw[h_C_min_dist_exact]
             exact h_outside_ball_dist c1 h_c1_in_C
-        . have h_c1_eq_c : c1 = c := by
+        · have h_c1_eq_c : c1 = c := by
             have h_or := Set.mem_insert_iff.mp hc1
             tauto
           have h_c2_in_C : c2 ∈ C := by
