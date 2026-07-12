@@ -223,14 +223,15 @@ lemma maxPacking (C : Code α n) (d : ℕ)
   (h_C_maximal : C.maximalWrtInclusion)
   (h_C_min_dist : C.minDist ≤ d) :
   (q α)^n ≤ C.ncard * hammingVolume (q α) n (d - 1) := by
-  have h_d_geq_1 : 1 ≤ d := by
+  /- have h_d_geq_1 : 1 ≤ d := by
     have h1 := (one_leq_minDist α n C).trans h_C_min_dist
     exact_mod_cast h1
+  -/
   have hC := Set.toFinite C.toSet
   calc (q α)^n
       -- = |∪ x ∈ C, B(x, d-1)|
       = (⋃ x ∈ C, hammingBall α n x (d - 1)).ncard :=
-        (covers α n d C h_d_geq_1 h_C_maximal h_C_min_dist).symm
+        (covers α n d C h_C_maximal h_C_min_dist).symm
       -- = |⋃ x ∈ C.toFinset, B(x, d-1)|
     _ = (⋃ x ∈ hC.toFinset, hammingBall α n x (d - 1)).ncard := by
         simp only [Set.Finite.mem_toFinset]; rfl
