@@ -210,20 +210,16 @@ def maximalWrtInclusion (C : Code α n) : Prop :=
 
 omit [Fintype α] in
 /-- A code that is a subset of another must always have a greater than or equal min distance -/
-lemma subset_mindist (C D : Code α n) :
-  C ⊆ D → C.minDist ≥ D.minDist := by
-  intro h_C_subset_D
-  change ∀ x ∈ C, x ∈ D at h_C_subset_D
-  -- Unfold the definition of minimum distance into variables
+lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDist := by
   unfold minDist
+  -- it suffices to bound D.minDist by the distance of each pair of distinct codewords of C
   simp only [le_iInf_iff]
-  intro c1 hc1 c2 hc2 h_neq
-  apply iInf_le_of_le c1
-  apply iInf_le_of_le (h_C_subset_D c1 hc1)
-  apply iInf_le_of_le c2
-  apply iInf_le_of_le (h_C_subset_D c2 hc2)
-  apply iInf_le_of_le h_neq
-  rfl
+  intro c₁ hc₁ c₂ hc₂ hne
+  -- both codewords also lie in D, so the infimum over D is at most their distance
+  calc ⨅ x ∈ D, ⨅ y ∈ D, ⨅ _ : x ≠ y, (hammingDist x y : ℕ∞)
+      ≤ ⨅ y ∈ D, ⨅ _ : c₁ ≠ y, (hammingDist c₁ y : ℕ∞) := iInf₂_le c₁ (hsub c₁ hc₁)
+    _ ≤ ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞) := iInf₂_le c₂ (hsub c₂ hc₂)
+    _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
 
 /-- Given a maximal wrt inclusion code C with minimum distance ≤ d,
 block length n, and d <= n, the union of hamming balls with radius d-1 around each
@@ -241,7 +237,6 @@ lemma covers
   have h_C_min_dist_exact_leq_d : d_exact ≤ d := by
     rw[← h_C_min_dist_exact]
     simp[h_C_min_dist]
-
   -- Prove that we have some extraneous element
   have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
     by_contra! h_card
@@ -258,7 +253,6 @@ lemma covers
     rw [Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin]
     unfold Code.q
     rfl
-
   -- We can create D with the same min distance
   have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d_exact := by
     obtain ⟨c, h_c_not_in_union⟩ := h_extraneous_elt
