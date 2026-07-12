@@ -212,16 +212,16 @@ omit [Fintype α] in
 /-- A code that is a subset of another must always have a greater than or equal min distance -/
 lemma subset_mindist (C D : Code α n) :
   C ⊆ D → C.minDist ≥ D.minDist := by
-  intro hsub
-  change ∀ x ∈ C, x ∈ D at hsub
+  intro h_C_subset_D
+  change ∀ x ∈ C, x ∈ D at h_C_subset_D
   -- Unfold the definition of minimum distance into variables
   unfold minDist
   simp only [le_iInf_iff]
   intro c1 hc1 c2 hc2 h_neq
   apply iInf_le_of_le c1
-  apply iInf_le_of_le (hsub c1 hc1_in_C)
+  apply iInf_le_of_le (h_C_subset_D c1 hc1)
   apply iInf_le_of_le c2
-  apply iInf_le_of_le (hsub c2 hc2_in_C)
+  apply iInf_le_of_le (h_C_subset_D c2 hc2)
   apply iInf_le_of_le h_neq
   rfl
 
