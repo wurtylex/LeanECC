@@ -35,19 +35,54 @@
 \end{lemma}
 
 \begin{proof}
-  Let $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$, and for
-  $\mathbf{y} \in [q]^n$ set $T(\mathbf{y}) = \{j \in [n] \mid y_j \neq x_j\}$. For
-  $\mathbf{y} \in S_i$:
+  Write $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$ for the sphere,
+  and for a word $\mathbf{y} \in [q]^n$ let
+  \[
+    T(\mathbf{y}) = \{j \in [n] \mid y_j \neq x_j\}
+  \]
+  be its set of disagreement coordinates. By the definition of Hamming distance,
+  $\Delta(\mathbf{x}, \mathbf{y}) = |\{j \in [n] \mid x_j \neq y_j\}| = |T(\mathbf{y})|$, so
+  membership $\mathbf{y} \in S_i$ is the same as the condition $|T(\mathbf{y})| = i$.
+
+  We construct an explicit bijection. Let $\mathcal{P}_i$ be the set of pairs $(T, g)$ in which $T \subseteq [n]$
+  has $|T| = i$ and $g : T \to [q]$ satisfies $g(j) \neq x_j$ for every $j \in T$. Define the
+  forward map
+  \[
+    \Phi : S_i \to \mathcal{P}_i, \qquad
+    \Phi(\mathbf{y}) = \bigl(T(\mathbf{y}),\ (y_j)_{j \in T(\mathbf{y})}\bigr);
+  \]
+  this is well defined because $|T(\mathbf{y})| = i$ by the paragraph above, and $y_j \neq x_j$
+  for each $j \in T(\mathbf{y})$ by the definition of $T(\mathbf{y})$. Define the reverse map
+  \[
+    \Psi : \mathcal{P}_i \to S_i, \qquad
+    \Psi(T, g) = \mathbf{y}, \quad\text{where } y_j =
+      \begin{cases} g(j) & \text{if } j \in T, \\ x_j & \text{if } j \notin T. \end{cases}
+  \]
+  Its image lies in $S_i$: the word $\mathbf{y} = \Psi(T, g)$ has $y_j \neq x_j$ exactly on $T$
+  (on $T$ since $g(j) \neq x_j$, and off $T$ since $y_j = x_j$), so $T(\mathbf{y}) = T$ and
+  therefore $|T(\mathbf{y})| = |T| = i$. The two maps are mutually inverse:
   \begin{itemize}
-    \item $|T(\mathbf{y})| = \Delta(\mathbf{x}, \mathbf{y}) = i$;
-    \item $y_j \in [q] \setminus \{x_j\}$ for $j \in T(\mathbf{y})$, and $y_j = x_j$ for
-      $j \notin T(\mathbf{y})$.
+    \item $\Psi(\Phi(\mathbf{y})) = \mathbf{y}$: on $T(\mathbf{y})$ the reconstructed word takes
+      the value $y_j$, and off $T(\mathbf{y})$ it takes the value $x_j$, which equals $y_j$
+      because $j \notin T(\mathbf{y})$ means exactly that $y_j = x_j$.
+    \item $\Phi(\Psi(T, g)) = (T, g)$: we showed $T(\Psi(T, g)) = T$, and on $T$ the values kept
+      by $\Phi$ are the $g(j)$.
   \end{itemize}
-  Conversely, any $i$-element subset $T \subseteq [n]$ together with any choice of a symbol
-  $y_j \in [q] \setminus \{x_j\}$ for each $j \in T$ (and $y_j = x_j$ elsewhere) yields a
-  distinct word at distance exactly $i$ from $\mathbf{x}$. This gives a bijection between the
-  sphere and these pairs. There are $\binom{n}{i}$ choices of the subset $T$, and for each one
-  $(q-1)^i$ choices of the symbols, so the sphere has $\binom{n}{i}(q-1)^i$ elements.
+  Therefore, $|S_i| = |\mathcal{P}_i|$.
+
+  It remains to count $\mathcal{P}_i$. Grouping the pairs by their first coordinate $T$,
+  \[
+    |\mathcal{P}_i| = \sum_{\substack{T \subseteq [n] \\ |T| = i}}
+      \bigl|\{\, g : T \to [q] \mid g(j) \neq x_j \text{ for all } j \in T \,\}\bigr|.
+  \]
+  For a fixed $T$, specifying such a $g$ means choosing, independently for each $j \in T$, one of
+  the $q - 1$ values in $[q] \setminus \{x_j\}$; there are thus $(q-1)^{|T|} = (q-1)^i$ such
+  functions. As the number of $i$-element subsets of $[n]$ is $\binom{n}{i}$,
+  \[
+    |S_i| = |\mathcal{P}_i|
+      = \sum_{\substack{T \subseteq [n] \\ |T| = i}} (q-1)^i
+      = \binom{n}{i}(q-1)^i. \qedhere
+  \]
 \end{proof}
 
 \begin{lemma}[Ball cardinality equals volume]
@@ -59,16 +94,32 @@
 
 \begin{proof}
   \uses{lemma:SphereCard}
-  For $0 \leq i \leq r$ let $S_i = \{\mathbf{y} \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$.
-  Every word $\mathbf{y}$ has a single Hamming distance to $\mathbf{x}$, so all of the $S_i$ are
-  pairwise disjoint, and since $\Delta(\mathbf{x}, \mathbf{y}) \leq r$ holds iff
-  $\Delta(\mathbf{x}, \mathbf{y}) = i$ for some $0 \leq i \leq r$, we have
-  $B(\mathbf{x}, r) = \bigsqcup_{i=0}^{r} S_i$. Therefore,
+  For each integer $0 \leq i \leq r$ let $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$
+  be the sphere of radius $i$ about $\mathbf{x}$.
+
+  The $S_i$ are pairwise disjoint: if $\mathbf{y} \in S_i \cap S_j$ then
+  $i = \Delta(\mathbf{x}, \mathbf{y}) = j$, so distinct indices give disjoint spheres, as a word
+  has a single Hamming distance to $\mathbf{x}$.
+
+  The $S_i$ also cover the ball. By the definition of the Hamming ball,
+  $\mathbf{y} \in B(\mathbf{x}, r)$ means $\Delta(\mathbf{x}, \mathbf{y}) \leq r$. Since
+  $\Delta(\mathbf{x}, \mathbf{y})$ is a nonnegative integer, this holds iff
+  $\Delta(\mathbf{x}, \mathbf{y}) = i$ for exactly one $i$ with $0 \leq i \leq r$, i.e. iff
+  $\mathbf{y} \in S_i$ for some such $i$. Therefore,
   \[
-    |B(\mathbf{x}, r)| = \sum_{i=0}^{r} |S_i| = \sum_{i=0}^{r} \binom{n}{i}(q-1)^i = \Vol_q(n, r),
+    B(\mathbf{x}, r) = \bigsqcup_{i=0}^{r} S_i,
   \]
-  using Lemma~\ref{lemma:SphereCard} for each sphere and the definition of $\Vol_q$ for the
-  last equality.
+  a disjoint union by the previous paragraph.
+
+  Finally, we compute the cardinalities. Because the union is disjoint, its cardinality is the sum of the
+  cardinalities of the parts, and each part is counted by Lemma~\ref{lemma:SphereCard}:
+  \[
+    |B(\mathbf{x}, r)|
+      = \sum_{i=0}^{r} |S_i|
+      = \sum_{i=0}^{r} \binom{n}{i}(q-1)^i.
+  \]
+  The right-hand side is exactly $\Vol_q(n, r)$ by the definition of the volume, so
+  $|B(\mathbf{x}, r)| = \Vol_q(n, r)$.
 \end{proof}
 
 \begin{lemma}[Volume entropy bound]
