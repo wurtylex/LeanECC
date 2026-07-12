@@ -278,7 +278,7 @@ lemma covers
       specialize h_c_not_in_union b h_b_in_C
       have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
       exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
-    let D := C ∪ {c}
+    let D := C.toSet ∪ {c}
     use D
     -- Goal: D has minimum distance d
     have h_D_minDist : minDist α n D = d_exact := by
@@ -288,6 +288,7 @@ lemma covers
         rw[← h_C_min_dist_exact]
         apply subset_mindist
         simp
+        tauto
       . -- Goal: D.minDist ≥ d
         unfold D
         rw[← h_C_min_dist_exact]
@@ -303,41 +304,51 @@ lemma covers
         intro hc2
         apply le_iInf
         intro h_neq
+        simp at hc1
+        simp at hc2
         -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
         . by_cases h_c2_in_C : (c2 ∈ C)
           . apply iInf_le_of_le c1
-            simp[h_c1_in_C]
+            apply iInf_le_of_le h_c1_in_C
             apply iInf_le_of_le c2
-            simp[h_c2_in_C]
+            apply iInf_le_of_le h_c2_in_C
             apply iInf_le_of_le h_neq
             rfl
-          . simp[h_c2_in_C] at hc2
-            rw[hc2] at h_neq
-            simp[h_neq] at hc1
-            rw[hc2]
+          . have h_c2_eq_c : c2 = c := by
+              have h_or := Set.mem_insert_iff.mp hc2
+              tauto
+            rw[h_c2_eq_c]
             rw[← minDist]
             rw[h_C_min_dist_exact]
-            simp[h_outside_ball_dist c1 hc1]
-        . simp[h_c1_in_C] at hc1
-          rw[hc1] at h_neq
-          simp at hc2
-          symm at h_neq
-          simp[h_neq] at hc2
-          rw[hc1]
+            exact h_outside_ball_dist c1 h_c1_in_C
+        . have h_c1_eq_c : c1 = c := by
+            have h_or := Set.mem_insert_iff.mp hc1
+            tauto
+          have h_c2_in_C : c2 ∈ C := by
+            have h_or := Set.mem_insert_iff.mp hc2
+            rw[h_c1_eq_c] at h_neq
+            symm at h_neq
+            simp[h_neq] at h_or
+            exact h_or
+          rw[h_c1_eq_c]
           rw[← minDist]
           rw[h_C_min_dist_exact]
           rw[hammingDist_comm]
-          simp[h_outside_ball_dist c2 hc2]
+          exact h_outside_ball_dist c2 h_c2_in_C
     rw[h_D_minDist]
     simp[D]
-    intro h_insert_c_subset_of_C
-    have hc_in_C : c ∈ C := h_insert_c_subset_of_C (Set.mem_insert c C)
-    apply h_c_not_in_union
-    simp
-    use c
-    simp
-    exact hc_in_C
+    constructor
+    · -- Goal 1: C ⊆ insert c C
+      exact Set.subset_insert c C
+    · -- Goal 2: ¬(insert c C ⊆ C)
+      intro h_insert_c_subset_of_C
+      apply h_c_not_in_union
+      simp
+      use c
+      simp
+      apply h_insert_c_subset_of_C
+      exact Set.mem_insert c C
 
   -- Therefore C is not maximal
   have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
