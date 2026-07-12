@@ -273,7 +273,7 @@ lemma covers
         rw[← h_C_min_dist_exact]
         apply subset_mindist
         simp
-        tauto.
+        tauto
       · -- Goal: D.minDist ≥ d
         unfold D
         rw[← h_C_min_dist_exact]
