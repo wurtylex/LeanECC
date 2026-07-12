@@ -216,17 +216,8 @@ lemma subset_mindist (C D : Code α n) :
   change ∀ x ∈ C, x ∈ D at hsub
   -- Unfold the definition of minimum distance into variables
   unfold minDist
-  apply le_iInf
-  intro c1
-  apply le_iInf
-  intro hc1_in_C
-  apply le_iInf
-  intro c2
-  apply le_iInf
-  intro hc2_in_C
-  apply le_iInf
-  intro h_neq
-  -- Repack everything
+  simp only [le_iInf_iff]
+  intro c1 hc1 c2 hc2 h_neq
   apply iInf_le_of_le c1
   apply iInf_le_of_le (hsub c1 hc1_in_C)
   apply iInf_le_of_le c2
@@ -294,16 +285,8 @@ lemma covers
         rw[← h_C_min_dist_exact]
         unfold minDist
         -- Pull out elements from the constructed code
-        apply le_iInf
-        intro c1
-        apply le_iInf
-        intro hc1
-        apply le_iInf
-        intro c2
-        apply le_iInf
-        intro hc2
-        apply le_iInf
-        intro h_neq
+        simp only [le_iInf_iff]
+        intro c1 hc1 c2 hc2 h_neq
         simp at hc1
         simp at hc2
         -- Case on the membership of c1,c2 in C
