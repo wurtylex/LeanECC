@@ -236,7 +236,7 @@ lemma covers
   have h_C_min_dist_exact : C.minDist = d_exact := by tauto
   have h_C_min_dist_exact_leq_d : d_exact ≤ d := by
     rw[← h_C_min_dist_exact]
-    simp[h_C_min_dist]
+    exact h_C_min_dist
   -- Prove that we have some extraneous element
   have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
     by_contra! h_card
@@ -259,7 +259,7 @@ lemma covers
     -- c must have a hamming distance of at least d from any element of C
     have h_outside_ball_dist (b : Fin n → α) (h_b_in_C : b ∈ C): d_exact ≤ hammingDist b c := by
       unfold hammingBall at h_c_not_in_union
-      simp at h_c_not_in_union
+      simp only [Code, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop, not_exists, not_and, not_le] at h_c_not_in_union
       specialize h_c_not_in_union b h_b_in_C
       have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
       exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
@@ -281,8 +281,8 @@ lemma covers
         -- Pull out elements from the constructed code
         simp only [le_iInf_iff]
         intro c1 hc1 c2 hc2 h_neq
-        simp at hc1
-        simp at hc2
+        simp only [Code, toSet, Set.union_singleton] at hc1
+        simp only [Code, toSet, Set.union_singleton] at hc2
         -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
         · by_cases h_c2_in_C : (c2 ∈ C)
@@ -306,7 +306,7 @@ lemma covers
             have h_or := Set.mem_insert_iff.mp hc2
             rw[h_c1_eq_c] at h_neq
             symm at h_neq
-            simp[h_neq] at h_or
+            simp only [h_neq, false_or] at h_or
             exact h_or
           rw[h_c1_eq_c]
           rw[← minDist]
