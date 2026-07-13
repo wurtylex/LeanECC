@@ -272,7 +272,7 @@ lemma covers
         unfold D
         rw[← h_C_min_dist_exact]
         apply subset_mindist
-        simp
+        simp only [Code, toSet, Set.union_singleton]
         tauto
       · -- Goal: D.minDist ≥ d
         unfold D
@@ -322,21 +322,20 @@ lemma covers
       · -- Goal 2a: ¬(insert c C ⊆ C)
         intro h_insert_c_subset_of_C
         apply h_c_not_in_union
-        simp
+        simp only [Code, Set.mem_iUnion, mem_hammingBall]
         use c
-        simp
+        simp only [hammingDist_self, zero_le, exists_prop, and_true]
         apply h_insert_c_subset_of_C
         exact Set.mem_insert c C
       · -- Goal 2b: d_exact = d_exact
         trivial
-
   -- Therefore C is not maximal
   have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
     unfold maximalWrtInclusion
     push Not
     rw[h_C_min_dist_exact]
     tauto
-  simp[h_C_maximal] at h_C_not_maximal
+  simp only [h_C_maximal, not_true_eq_false] at h_C_not_maximal
 
 /-- Maximal packing to fill in later -/
 lemma maxPacking (C : Code α n) (d : ℕ)
