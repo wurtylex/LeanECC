@@ -286,12 +286,10 @@ lemma covers
         -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
         · by_cases h_c2_in_C : (c2 ∈ C)
-          · apply iInf_le_of_le c1
-            apply iInf_le_of_le h_c1_in_C
-            apply iInf_le_of_le c2
-            apply iInf_le_of_le h_c2_in_C
-            apply iInf_le_of_le h_neq
-            rfl
+          · exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
+              ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) := iInf₂_le c1 h_c1_in_C
+            _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) := iInf₂_le c2 h_c2_in_C
+            _ ≤ (hammingDist c1 c2 : ℕ∞) := iInf_le _ h_neq
           · have h_c2_eq_c : c2 = c := by
               have h_or := Set.mem_insert_iff.mp hc2
               tauto
@@ -308,10 +306,8 @@ lemma covers
             symm at h_neq
             simp only [h_neq, false_or] at h_or
             exact h_or
-          rw[h_c1_eq_c]
           rw[← minDist]
-          rw[h_C_min_dist_exact]
-          rw[hammingDist_comm]
+          rw[h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
           exact h_outside_ball_dist c2 h_c2_in_C
     unfold D
     rw[h_D_minDist, Set.union_singleton]
@@ -320,13 +316,11 @@ lemma covers
       exact Set.subset_insert c C
     · constructor
       · -- Goal 2a: ¬(insert c C ⊆ C)
-        intro h_insert_c_subset_of_C
+        intro h_sub
+        have h_c_in_C : c ∈ C := h_sub c (Set.mem_insert c (toSet α n C))
         apply h_c_not_in_union
         simp only [Code, Set.mem_iUnion, mem_hammingBall]
-        use c
-        simp only [hammingDist_self, zero_le, exists_prop, and_true]
-        apply h_insert_c_subset_of_C
-        exact Set.mem_insert c C
+        exact ⟨c, h_c_in_C, by simp only [hammingDist_self, zero_le]⟩
       · -- Goal 2b: d_exact = d_exact
         trivial
   -- Therefore C is not maximal
