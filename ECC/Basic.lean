@@ -259,7 +259,7 @@ lemma covers
     -- c must have a hamming distance of at least d from any element of C
     have h_outside_ball_dist (b : Fin n → α) (h_b_in_C : b ∈ C): d_exact ≤ hammingDist b c := by
       unfold hammingBall at h_c_not_in_union
-      simp only [Code, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop, not_exists, not_and, not_le] at h_c_not_in_union
+      simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_le] at h_c_not_in_union
       specialize h_c_not_in_union b h_b_in_C
       have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
       exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
@@ -313,19 +313,22 @@ lemma covers
           rw[h_C_min_dist_exact]
           rw[hammingDist_comm]
           exact h_outside_ball_dist c2 h_c2_in_C
-    rw[h_D_minDist]
-    simp[D]
+    unfold D
+    rw[h_D_minDist, Set.union_singleton]
     constructor
     · -- Goal 1: C ⊆ insert c C
       exact Set.subset_insert c C
-    · -- Goal 2: ¬(insert c C ⊆ C)
-      intro h_insert_c_subset_of_C
-      apply h_c_not_in_union
-      simp
-      use c
-      simp
-      apply h_insert_c_subset_of_C
-      exact Set.mem_insert c C
+    · constructor
+      · -- Goal 2a: ¬(insert c C ⊆ C)
+        intro h_insert_c_subset_of_C
+        apply h_c_not_in_union
+        simp
+        use c
+        simp
+        apply h_insert_c_subset_of_C
+        exact Set.mem_insert c C
+      · -- Goal 2b: d_exact = d_exact
+        trivial
 
   -- Therefore C is not maximal
   have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
