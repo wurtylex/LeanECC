@@ -221,8 +221,8 @@ lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDis
     _ ≤ ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞) := iInf₂_le c₂ (hsub c₂ hc₂)
     _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
 
-/-- Given a maximal wrt inclusion code C with minimum distance ≤ d,
-block length n, and d <= n, the union of hamming balls with radius d-1 around each
+/-- Given a maximal wrt inclusion code C with distance ≤ d,
+the union of hamming balls with radius d-1 around each
 element of C cover the universe -/
 lemma covers
     (d : ℕ)
@@ -293,9 +293,7 @@ lemma covers
           · have h_c2_eq_c : c2 = c := by
               have h_or := Set.mem_insert_iff.mp hc2
               tauto
-            rw[h_c2_eq_c]
-            rw[← minDist]
-            rw[h_C_min_dist_exact]
+            rw[h_c2_eq_c, ← minDist, h_C_min_dist_exact]
             exact h_outside_ball_dist c1 h_c1_in_C
         · have h_c1_eq_c : c1 = c := by
             have h_or := Set.mem_insert_iff.mp hc1
@@ -306,8 +304,7 @@ lemma covers
             symm at h_neq
             simp only [h_neq, false_or] at h_or
             exact h_or
-          rw[← minDist]
-          rw[h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
+          rw[← minDist, h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
           exact h_outside_ball_dist c2 h_c2_in_C
     unfold D
     rw[h_D_minDist, Set.union_singleton]
@@ -328,7 +325,8 @@ lemma covers
     unfold maximalWrtInclusion
     push Not
     rw[h_C_min_dist_exact]
-    tauto
+    obtain ⟨D, h_C_sub_D, h_D_not_sub_C, h_minDists_equal⟩ := h_C_plus_extra
+    exact ⟨D, ⟨h_C_sub_D, h_minDists_equal.symm⟩, h_D_not_sub_C⟩
   simp only [h_C_maximal, not_true_eq_false] at h_C_not_maximal
 
 /-- Maximal packing to fill in later -/
