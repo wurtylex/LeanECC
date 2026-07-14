@@ -87,6 +87,8 @@
 
 \begin{lemma}[Ball cardinality equals volume]
   \label{lemma:BallCard}
+  \lean{Code.ncard_hammingBall}
+  \leanok
   \uses{def:HammingBall, def:Vol, def:q}
   For any $\mathbf{x} \in [q]^n$ and $r \geq 0$,
   \[|B(\mathbf{x}, r)| = \Vol_q(n, r).\]
@@ -125,6 +127,7 @@
 \begin{lemma}[Volume entropy bound]
 \label{lemma:VolEntropy}
 \lean{Code.hammingVolume_le_pow_mul_entropy}
+\leanok
 \uses{def:q, def:Vol}
 Let $q \geq 2$ and $n \geq 1$ be integers, and let $r$ be an integer with $0 \leq r$ and $\frac{r}{n} \leq 1 - \frac{1}{q}$. Then
 \[
