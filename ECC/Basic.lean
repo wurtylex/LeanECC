@@ -263,7 +263,7 @@ lemma covers
       specialize h_c_not_in_union b h_b_in_C
       have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
       exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
-    let D := C.toSet ∪ {c}
+    let D := insert c C.toSet
     use D
     -- Goal: D has minimum distance d
     have h_D_minDist : minDist α n D = d_exact := by
@@ -272,7 +272,6 @@ lemma covers
         unfold D
         rw[← h_C_min_dist_exact]
         apply subset_mindist
-        simp only [Code, toSet, Set.union_singleton]
         tauto
       · -- Goal: D.minDist ≥ d
         unfold D
@@ -281,15 +280,18 @@ lemma covers
         -- Pull out elements from the constructed code
         simp only [le_iInf_iff]
         intro c1 hc1 c2 hc2 h_neq
-        simp only [Code, toSet, Set.union_singleton] at hc1
-        simp only [Code, toSet, Set.union_singleton] at hc2
+        rw[toSet] at hc1
+        rw[toSet] at hc2
         -- Case on the membership of c1,c2 in C
         by_cases h_c1_in_C : (c1 ∈ C)
         · by_cases h_c2_in_C : (c2 ∈ C)
           · exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
-              ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) := iInf₂_le c1 h_c1_in_C
-            _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) := iInf₂_le c2 h_c2_in_C
-            _ ≤ (hammingDist c1 c2 : ℕ∞) := iInf_le _ h_neq
+              ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
+                iInf₂_le c1 h_c1_in_C
+            _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
+                iInf₂_le c2 h_c2_in_C
+            _ ≤ (hammingDist c1 c2 : ℕ∞) :=
+                iInf_le _ h_neq
           · have h_c2_eq_c : c2 = c := by
               have h_or := Set.mem_insert_iff.mp hc2
               tauto
@@ -307,7 +309,7 @@ lemma covers
           rw[← minDist, h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
           exact h_outside_ball_dist c2 h_c2_in_C
     unfold D
-    rw[h_D_minDist, Set.union_singleton]
+    rw[h_D_minDist]
     constructor
     · -- Goal 1: C ⊆ insert c C
       exact Set.subset_insert c C
@@ -327,6 +329,7 @@ lemma covers
     rw[h_C_min_dist_exact]
     obtain ⟨D, h_C_sub_D, h_D_not_sub_C, h_minDists_equal⟩ := h_C_plus_extra
     exact ⟨D, ⟨h_C_sub_D, h_minDists_equal.symm⟩, h_D_not_sub_C⟩
+  apply h_C_not_maximal
   simp only [h_C_maximal, not_true_eq_false] at h_C_not_maximal
 
 /-- Maximal packing to fill in later -/
