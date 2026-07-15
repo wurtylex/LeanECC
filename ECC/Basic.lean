@@ -245,7 +245,8 @@ lemma covers
     -- Applying h sets our goal to prove it IS q^n.
     apply h
     -- Substitute the union and iron out cardinality definitions
-    rw [h_union_is_univ, Set.ncard_univ, Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin]
+    rw [h_union_is_univ, Set.ncard_univ, Nat.card_eq_fintype_card,
+      Fintype.card_fun, Fintype.card_fin]
     unfold Code.q
     rfl
   -- We can create D with the same min distance
