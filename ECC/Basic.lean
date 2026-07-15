@@ -239,18 +239,13 @@ lemma covers
     exact h_C_min_dist
   -- Prove that we have some extraneous element
   have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
-    by_contra! h_card
-    -- 1. Since every element is in the union, the union is the universal set
-    have h_univ : (⋃ x ∈ C, hammingBall α n x (d - 1)) = Set.univ :=
-      Set.eq_univ_of_forall h_card
-    -- 2. Your hypothesis `h` is an `And`. The right side (`h.2`) states the
-    -- cardinality is NOT q^n. Applying it sets our goal to prove it IS q^n.
+    -- "An element is missing implies the set is not the universal set"
+    rw [← Set.ne_univ_iff_exists_notMem]
+    intro h_union_is_univ
+    -- Applying h sets our goal to prove it IS q^n.
     apply h
-    -- 3. Substitute the union for the universal set
-    rw [h_univ, Set.ncard_univ]
-    -- 4. Calculate the cardinality of the function space (Fin n → α)
-    -- This uses the exact same lemmas you successfully used up on line 93!
-    rw [Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin]
+    -- Substitute the union and iron out cardinality definitions
+    rw [h_union_is_univ, Set.ncard_univ, Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin]
     unfold Code.q
     rfl
   -- We can create D with the same min distance
