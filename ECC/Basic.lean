@@ -231,7 +231,7 @@ lemma covers
     (h_C_min_dist : C.minDist ≤ d) :
     (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by
   by_contra! h
-  -- Get the exact min Distance
+  -- Define the exact min distance and assert some basic properties
   let d_exact := C.minDist
   have h_C_min_dist_exact : C.minDist = d_exact := by tauto
   have h_C_min_dist_exact_leq_d : d_exact ≤ d := by
@@ -317,15 +317,12 @@ lemma covers
         exact ⟨c, h_c_in_C, by simp only [hammingDist_self, zero_le]⟩
       · -- Goal 2b: d_exact = d_exact
         trivial
-  -- Therefore C is not maximal
-  have h_C_not_maximal: ¬ (maximalWrtInclusion α n C) := by
-    unfold maximalWrtInclusion
-    push Not
-    rw[h_C_min_dist_exact]
-    obtain ⟨D, h_C_sub_D, h_D_not_sub_C, h_minDists_equal⟩ := h_C_plus_extra
-    exact ⟨D, ⟨h_C_sub_D, h_minDists_equal.symm⟩, h_D_not_sub_C⟩
-  apply h_C_not_maximal
-  simp only [h_C_maximal, not_true_eq_false] at h_C_not_maximal
+  -- Extract D and its properties
+  obtain ⟨D, h_C_sub_D, h_D_not_sub_C, h_D_minDist⟩ := h_C_plus_extra
+  -- h_C_maximal dictates that if C ⊆ D and they have the same minDist, then D ⊆ C.
+  have h_D_sub_C : D ⊆ C := h_C_maximal D ⟨h_C_sub_D, by rw [h_C_min_dist_exact, h_D_minDist]⟩
+  -- This directly contradicts our construction that D is not a subset of C
+  exact h_D_not_sub_C h_D_sub_C
 
 /-- Maximal packing to fill in later -/
 lemma maxPacking (C : Code α n) (d : ℕ)
