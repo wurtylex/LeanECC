@@ -89,6 +89,67 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
+/-- Sphere cardinality: the number of words at Hamming distance exactly `i` from `x`
+is `C(n,i)·(q-1)^i`. -/
+lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
+    {y : Fin n → α | hammingDist x y = i}.ncard = n.choose i * (q α - 1) ^ i := by
+  -- Reduce the `ncard` of the sphere to a `Finset.card` of a filter of `univ`.
+  rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  -- Partition the sphere by each word's set of disagreement coordinates
+  -- `supp y = {j | x j ≠ y j}`, a size-`i` subset of `[n]` (its size is `hammingDist x y`).
+  have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y = i : Finset _) :
+      Set (Fin n → α)).MapsTo (fun y => Finset.univ.filter fun j => x j ≠ y j)
+      ((Finset.univ : Finset (Fin n)).powersetCard i) := by
+    intro y hy
+    rw [Finset.mem_coe, Finset.mem_filter] at hy
+    rw [Finset.mem_coe, Finset.mem_powersetCard]
+    exact ⟨Finset.filter_subset _ _, hy.2⟩
+  rw [Finset.card_eq_sum_card_fiberwise hmaps]
+  -- Each fiber (words with a fixed disagreement set `S`, `|S| = i`) has `(q-1)^i` elements,
+  -- and there are `C(n,i)` choices of `S`.
+  trans ∑ _S ∈ (Finset.univ : Finset (Fin n)).powersetCard i, (q α - 1) ^ i
+  · apply Finset.sum_congr rfl
+    intro S hS
+    rw [Finset.mem_powersetCard] at hS
+    obtain ⟨_, hScard⟩ := hS
+    -- The fiber is exactly the words that equal `x` off `S` and differ from `x` on `S`,
+    -- i.e. an element of `∏ j, (if j ∈ S then [q]∖{x j} else {x j})`.
+    have hset : (Finset.univ.filter fun y : Fin n → α => hammingDist x y = i).filter
+        (fun y => (Finset.univ.filter fun j => x j ≠ y j) = S)
+        = Fintype.piFinset fun j => if j ∈ S then Finset.univ.erase (x j) else {x j} := by
+      ext y
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fintype.mem_piFinset]
+      -- Per-coordinate reading of membership in the pi-finset.
+      have key : ∀ j : Fin n,
+          (y j ∈ if j ∈ S then Finset.univ.erase (x j) else {x j}) ↔ (x j ≠ y j ↔ j ∈ S) := by
+        intro j
+        by_cases hj : j ∈ S
+        · rw [if_pos hj, Finset.mem_erase]
+          simp only [Finset.mem_univ, and_true, hj, iff_true]
+          exact ne_comm
+        · rw [if_neg hj, Finset.mem_singleton]
+          simp only [hj, iff_false, not_not]
+          exact eq_comm
+      -- `supp y = S` unfolds to the same per-coordinate condition.
+      have hfilterS : ((Finset.univ.filter fun j => x j ≠ y j) = S) ↔ ∀ j, (x j ≠ y j ↔ j ∈ S) := by
+        rw [Finset.ext_iff]
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [hfilterS]
+      simp only [key]
+      -- The distance condition `hammingDist x y = i` is implied by `supp y = S` (since `|S| = i`).
+      refine ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
+      calc hammingDist x y = (Finset.univ.filter fun j => x j ≠ y j).card := rfl
+        _ = S.card := by rw [hfilterS.mpr h]
+        _ = i := hScard
+    -- Count the fiber: `∏ j, |if j ∈ S then [q]∖{x j} else {x j}| = (q-1)^|S| = (q-1)^i`.
+    rw [hset, Fintype.card_piFinset]
+    simp only [apply_ite Finset.card, Finset.card_erase_of_mem (Finset.mem_univ _),
+      Finset.card_univ, Finset.card_singleton]
+    rw [Fintype.prod_ite_mem, Finset.prod_const, hScard]
+    rfl
+  · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
+    rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
+
 /-- A Hamming ball of radius r contains exactly V_q(n,r) words. -/
 lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
     (hammingBall α n x r).ncard = hammingVolume (q α) n r := by sorry

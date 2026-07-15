@@ -29,12 +29,15 @@
 
 \begin{lemma}[Sphere cardinality]
   \label{lemma:SphereCard}
+  \lean{Code.ncard_hammingSphere}
+  \leanok
   \uses{def:q}
   For any $\mathbf{x} \in [q]^n$ and integer $i \geq 0$,
   \[\bigl|\{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}\bigr| = \binom{n}{i}(q-1)^i.\]
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Write $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$ for the sphere,
   and for a word $\mathbf{y} \in [q]^n$ let
   \[
