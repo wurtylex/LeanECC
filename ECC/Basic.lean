@@ -152,7 +152,32 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
 
 /-- A Hamming ball of radius r contains exactly V_q(n,r) words. -/
 lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
-    (hammingBall α n x r).ncard = hammingVolume (q α) n r := by sorry
+    (hammingBall α n x r).ncard = hammingVolume (q α) n r := by
+  -- Reduce the `ncard` of the ball to a `Finset.card` of a filter of `univ`.
+  have hball : hammingBall α n x r = {y : Fin n → α | hammingDist x y ≤ r} := rfl
+  rw [hball, hammingVolume_def, Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  -- Partition the ball by each word's distance to `x`, which lands in `{0, …, r}`.
+  have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y ≤ r : Finset _) :
+      Set (Fin n → α)).MapsTo (fun y => hammingDist x y) (Finset.range (r + 1)) := by
+    intro y hy
+    rw [Finset.mem_coe, Finset.mem_filter] at hy
+    rw [Finset.mem_coe, Finset.mem_range]
+    exact Nat.lt_succ_of_le hy.2
+  rw [Finset.card_eq_sum_card_fiberwise hmaps]
+  -- The fiber at distance `i ≤ r` is the sphere of radius `i`, counted by `ncard_hammingSphere`.
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [Finset.mem_range] at hi
+  have hfib : (Finset.univ.filter fun y : Fin n → α => hammingDist x y ≤ r).filter
+      (fun y => hammingDist x y = i) = Finset.univ.filter fun y => hammingDist x y = i := by
+    ext y
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    -- Goal: `hammingDist x y ≤ r ∧ hammingDist x y = i ↔ hammingDist x y = i`.
+    -- Since `i ≤ r`, the equality `hammingDist x y = i` already forces `hammingDist x y ≤ r`.
+    have hir : i ≤ r := Nat.lt_succ_iff.mp hi
+    omega
+  rw [hfib, ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card']
+  exact ncard_hammingSphere α n x i
 
 /-- The volume entropy bound: Vol_q(n,r) ≤ q^(n·H_q(r/n)), where H_q is the q-ary
 entropy function (`Real.qaryEntropy q p / Real.log q` converts from nats to log base q). -/
