@@ -208,6 +208,11 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
+omit [DecidableEq α] in
+/-- The universal set has cardinality (q α)^n -/
+lemma ncard_univ_eq_q_pow : (Set.univ : Set (Fin n → α)).ncard = (q α)^n := by
+  simp only [Set.ncard_univ, Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin, q]
+
 omit [Fintype α] in
 /-- A code that is a subset of another must always have a greater than or equal min distance -/
 lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDist := by
@@ -244,11 +249,7 @@ lemma covers
     intro h_union_is_univ
     -- Applying h sets our goal to prove it IS q^n.
     apply h
-    -- Substitute the union and iron out cardinality definitions
-    rw [h_union_is_univ, Set.ncard_univ, Nat.card_eq_fintype_card,
-      Fintype.card_fun, Fintype.card_fin]
-    unfold Code.q
-    rfl
+    rw [h_union_is_univ, ncard_univ_eq_q_pow]
   -- We can create D with the same min distance
   have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d_exact := by
     obtain ⟨c, h_c_not_in_union⟩ := h_extraneous_elt
