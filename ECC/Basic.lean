@@ -31,7 +31,7 @@ open scoped ENNReal
 variable (α : Type*) [Fintype α] [DecidableEq α] (n : ℕ)
 
 /-- A code of blocklength n over α is a subset of α^n. -/
-def Code : Type _ := Set (Fin n → α)
+@[simp] def Code : Type _ := Set (Fin n → α)
 
 namespace Code
 /-- The alphabet size. -/
@@ -41,11 +41,11 @@ def q : ℕ := Fintype.card α
 def toSet (C : Code α n) : Set (Fin n → α) := C
 
 /-- Membership by unfolding to set -/
-instance : Membership (Fin n → α) (Code α n) :=
+@[simp] instance : Membership (Fin n → α) (Code α n) :=
   ⟨fun C c => c ∈ C.toSet⟩
 
 /-- Subset using membership -/
-instance : HasSubset (Code α n) :=
+@[simp] instance : HasSubset (Code α n) :=
   ⟨fun C D => ∀ c ∈ C, c ∈ D⟩
 
 /-- The dimension of the code C, is log_q(|C|) -/
@@ -208,15 +208,123 @@ lemma rate_le_one (C : Code α n) : C.rate ≤ 1 :=
 def maximalWrtInclusion (C : Code α n) : Prop :=
   ∀ D : Code α n, C ⊆ D ∧ (C.minDist = D.minDist) → D ⊆ C
 
-/-- Given a maximal wrt inclusion code C with minimum distance ≤ d,
-block length n, and d <= n, the union of hamming balls with radius d-1 around each
+omit [DecidableEq α] in
+/-- The universal set has cardinality (q α)^n -/
+lemma ncard_univ_eq_q_pow : (Set.univ : Set (Fin n → α)).ncard = (q α)^n := by
+  simp only [Set.ncard_univ, Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin, q]
+
+omit [Fintype α] in
+/-- A code that is a subset of another must always have a greater than or equal min distance -/
+lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDist := by
+  unfold minDist
+  -- it suffices to bound D.minDist by the distance of each pair of distinct codewords of C
+  simp only [le_iInf_iff]
+  intro c₁ hc₁ c₂ hc₂ hne
+  -- both codewords also lie in D, so the infimum over D is at most their distance
+  calc ⨅ x ∈ D, ⨅ y ∈ D, ⨅ _ : x ≠ y, (hammingDist x y : ℕ∞)
+      ≤ ⨅ y ∈ D, ⨅ _ : c₁ ≠ y, (hammingDist c₁ y : ℕ∞) := iInf₂_le c₁ (hsub c₁ hc₁)
+    _ ≤ ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞) := iInf₂_le c₂ (hsub c₂ hc₂)
+    _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
+
+/-- Given a maximal wrt inclusion code C with distance ≤ d,
+the union of hamming balls with radius d-1 around each
 element of C cover the universe -/
 lemma covers
     (d : ℕ)
     (C : Code α n)
     (h_C_maximal : C.maximalWrtInclusion)
     (h_C_min_dist : C.minDist ≤ d) :
-    (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by sorry
+    (⋃ x ∈ C, (hammingBall α n x (d - 1))).ncard = (q α)^n := by
+  by_contra! h
+  -- Define the exact min distance and assert some basic properties
+  let d_exact := C.minDist
+  have h_C_min_dist_exact : C.minDist = d_exact := by tauto
+  have h_C_min_dist_exact_leq_d : d_exact ≤ d := by
+    rw[← h_C_min_dist_exact]
+    exact h_C_min_dist
+  -- Prove that we have some extraneous element
+  have h_extraneous_elt : ∃ (c : Fin n → α), c ∉ (⋃ x ∈ C, hammingBall α n x (d - 1)) := by
+    -- "An element is missing implies the set is not the universal set"
+    rw [← Set.ne_univ_iff_exists_notMem]
+    intro h_union_is_univ
+    -- Applying h sets our goal to prove it IS q^n.
+    apply h
+    rw [h_union_is_univ, ncard_univ_eq_q_pow]
+  -- We can create D with the same min distance
+  have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d_exact := by
+    obtain ⟨c, h_c_not_in_union⟩ := h_extraneous_elt
+    -- c must have a hamming distance of at least d from any element of C
+    have h_outside_ball_dist (b : Fin n → α) (h_b_in_C : b ∈ C): d_exact ≤ hammingDist b c := by
+      unfold hammingBall at h_c_not_in_union
+      simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_le] at h_c_not_in_union
+      specialize h_c_not_in_union b h_b_in_C
+      have h_hamming_bc_le : d ≤ hammingDist b c := Nat.le_of_pred_lt h_c_not_in_union
+      exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
+    let D := insert c C.toSet
+    use D
+    -- Goal: D has minimum distance d
+    have h_D_minDist : minDist α n D = d_exact := by
+      apply le_antisymm
+      · -- Goal: D.minDist ≤ d
+        unfold D
+        rw[← h_C_min_dist_exact]
+        apply subset_mindist
+        tauto
+      · -- Goal: D.minDist ≥ d
+        unfold D
+        rw[← h_C_min_dist_exact]
+        unfold minDist
+        -- Pull out elements from the constructed code
+        simp only [le_iInf_iff]
+        intro c1 hc1 c2 hc2 h_neq
+        rw[toSet] at hc1
+        rw[toSet] at hc2
+        -- Case on the membership of c1,c2 in C
+        by_cases h_c1_in_C : (c1 ∈ C)
+        · by_cases h_c2_in_C : (c2 ∈ C)
+          · exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
+              ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
+                iInf₂_le c1 h_c1_in_C
+            _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
+                iInf₂_le c2 h_c2_in_C
+            _ ≤ (hammingDist c1 c2 : ℕ∞) :=
+                iInf_le _ h_neq
+          · have h_c2_eq_c : c2 = c := by
+              have h_or := Set.mem_insert_iff.mp hc2
+              tauto
+            rw[h_c2_eq_c, ← minDist, h_C_min_dist_exact]
+            exact h_outside_ball_dist c1 h_c1_in_C
+        · have h_c1_eq_c : c1 = c := by
+            have h_or := Set.mem_insert_iff.mp hc1
+            tauto
+          have h_c2_in_C : c2 ∈ C := by
+            have h_or := Set.mem_insert_iff.mp hc2
+            rw[h_c1_eq_c] at h_neq
+            symm at h_neq
+            simp only [h_neq, false_or] at h_or
+            exact h_or
+          rw[← minDist, h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
+          exact h_outside_ball_dist c2 h_c2_in_C
+    unfold D
+    rw[h_D_minDist]
+    constructor
+    · -- Goal 1: C ⊆ insert c C
+      exact Set.subset_insert c C
+    · constructor
+      · -- Goal 2a: ¬(insert c C ⊆ C)
+        intro h_sub
+        have h_c_in_C : c ∈ C := h_sub c (Set.mem_insert c (toSet α n C))
+        apply h_c_not_in_union
+        simp only [Code, Set.mem_iUnion, mem_hammingBall]
+        exact ⟨c, h_c_in_C, by simp only [hammingDist_self, zero_le]⟩
+      · -- Goal 2b: d_exact = d_exact
+        trivial
+  -- Extract D and its properties
+  obtain ⟨D, h_C_sub_D, h_D_not_sub_C, h_D_minDist⟩ := h_C_plus_extra
+  -- h_C_maximal dictates that if C ⊆ D and they have the same minDist, then D ⊆ C.
+  have h_D_sub_C : D ⊆ C := h_C_maximal D ⟨h_C_sub_D, by rw [h_C_min_dist_exact, h_D_minDist]⟩
+  -- This directly contradicts our construction that D is not a subset of C
+  exact h_D_not_sub_C h_D_sub_C
 
 /-- Maximal packing to fill in later -/
 lemma maxPacking (C : Code α n) (d : ℕ)
