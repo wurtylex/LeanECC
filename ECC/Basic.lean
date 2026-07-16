@@ -89,6 +89,14 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
+/-- The volume of a Hamming ball is positive, since the i = 0 term of the sum is 1. -/
+lemma hammingVolume_pos (q n r : ℕ) : 0 < hammingVolume q n r :=
+  Nat.lt_of_lt_of_le Nat.zero_lt_one <|
+    calc 1 = n.choose 0 * (q - 1) ^ 0 := by simp
+      _ ≤ ∑ i ∈ Finset.range (r + 1), n.choose i * (q - 1) ^ i :=
+        Finset.single_le_sum (f := fun i => n.choose i * (q - 1) ^ i)
+          (fun i _ => Nat.zero_le _) (Finset.mem_range.mpr r.succ_pos)
+
 /-- A Hamming ball of radius r contains exactly V_q(n,r) words. -/
 lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
     (hammingBall α n x r).ncard = hammingVolume (q α) n r := by sorry
@@ -245,6 +253,7 @@ lemma maxPacking (C : Code α n) (d : ℕ)
     _ = C.ncard * hammingVolume (q α) n (d - 1) := by
         rw [Finset.sum_const, smul_eq_mul, ← Set.ncard_eq_toFinset_card _ hC]
         rfl
+
 end Code
 
 end -- close @[expose] public section
