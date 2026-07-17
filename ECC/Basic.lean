@@ -226,6 +226,42 @@ lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDis
     _ ≤ ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞) := iInf₂_le c₂ (hsub c₂ hc₂)
     _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
 
+omit [Fintype α] in
+/-- Any unequal pair of elements of C will have a hamming distance ≥ than C's minDist -/
+lemma minDist_le_any_pair {C : Code α n} {c1 : Fin n → α} {c2 : Fin n → α}
+    (h_c1_in_C : c1 ∈ C)
+    (h_c2_in_C : c2 ∈ C)
+    (h_neq : c1 ≠ c2) :
+    hammingDist c1 c2 ≥ C.minDist := by
+  exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
+    ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
+      iInf₂_le c1 h_c1_in_C
+    _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
+      iInf₂_le c2 h_c2_in_C
+    _ ≤ (hammingDist c1 c2 : ℕ∞) :=
+      iInf_le _ h_neq
+
+omit [Fintype α] in
+/-- Lower bounds the minimum distance of a code after inserting a new codeword. -/
+lemma le_minDist_insert {C : Code α n} {c : Fin n → α} {d_exact : ℕ∞}
+    (h_minDist : C.minDist = d_exact)
+    (h_dist : ∀ x ∈ C, d_exact ≤ (hammingDist x c : ℕ∞)) :
+    d_exact ≤ minDist α n (insert c C.toSet : Set (Fin n → α)) := by
+  unfold minDist
+  simp only [le_iInf_iff]
+  intro c1 hc1 c2 hc2 h_neq
+  -- Pattern match on whether c1 and c2 are the new element 'c' or belong to 'C'
+  rcases Set.mem_insert_iff.mp hc1 with rfl | h1
+  · rcases Set.mem_insert_iff.mp hc2 with rfl | h2
+    · exact (h_neq rfl).elim -- c1 and c2 cannot both be c since c1 ≠ c2
+    · rw [hammingDist_comm]
+      exact h_dist c2 h2
+  · rcases Set.mem_insert_iff.mp hc2 with rfl | h2
+    · exact h_dist c1 h1
+    · -- Both elements are in C
+      rw [← h_minDist]
+      exact minDist_le_any_pair _ _ h1 h2 h_neq
+
 /-- Given a maximal wrt inclusion code C with distance ≤ d,
 the union of hamming balls with radius d-1 around each
 element of C cover the universe -/
@@ -253,7 +289,7 @@ lemma covers
   -- We can create D with the same min distance
   have h_C_plus_extra: ∃ D : Code α n, C ⊆ D ∧ ¬ (D ⊆ C) ∧ D.minDist = d_exact := by
     obtain ⟨c, h_c_not_in_union⟩ := h_extraneous_elt
-    -- c must have a hamming distance of at least d from any element of C
+    -- c must have a hamming distance of at least d from any element of C bc of the balls
     have h_outside_ball_dist (b : Fin n → α) (h_b_in_C : b ∈ C): d_exact ≤ hammingDist b c := by
       unfold hammingBall at h_c_not_in_union
       simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_le] at h_c_not_in_union
@@ -262,50 +298,14 @@ lemma covers
       exact h_C_min_dist_exact_leq_d.trans (by exact_mod_cast h_hamming_bc_le)
     let D := insert c C.toSet
     use D
-    -- Goal: D has minimum distance d
+    -- Goal: D.minDist = d_exact
     have h_D_minDist : minDist α n D = d_exact := by
       apply le_antisymm
-      · -- Goal: D.minDist ≤ d
-        unfold D
-        rw[← h_C_min_dist_exact]
-        apply subset_mindist
-        tauto
-      · -- Goal: D.minDist ≥ d
-        unfold D
-        rw[← h_C_min_dist_exact]
-        unfold minDist
-        -- Pull out elements from the constructed code
-        simp only [le_iInf_iff]
-        intro c1 hc1 c2 hc2 h_neq
-        rw[toSet] at hc1
-        rw[toSet] at hc2
-        -- Case on the membership of c1,c2 in C
-        by_cases h_c1_in_C : (c1 ∈ C)
-        · by_cases h_c2_in_C : (c2 ∈ C)
-          · exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
-              ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
-                iInf₂_le c1 h_c1_in_C
-            _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
-                iInf₂_le c2 h_c2_in_C
-            _ ≤ (hammingDist c1 c2 : ℕ∞) :=
-                iInf_le _ h_neq
-          · have h_c2_eq_c : c2 = c := by
-              have h_or := Set.mem_insert_iff.mp hc2
-              tauto
-            rw[h_c2_eq_c, ← minDist, h_C_min_dist_exact]
-            exact h_outside_ball_dist c1 h_c1_in_C
-        · have h_c1_eq_c : c1 = c := by
-            have h_or := Set.mem_insert_iff.mp hc1
-            tauto
-          have h_c2_in_C : c2 ∈ C := by
-            have h_or := Set.mem_insert_iff.mp hc2
-            rw[h_c1_eq_c] at h_neq
-            symm at h_neq
-            simp only [h_neq, false_or] at h_or
-            exact h_or
-          rw[← minDist, h_c1_eq_c, h_C_min_dist_exact, hammingDist_comm]
-          exact h_outside_ball_dist c2 h_c2_in_C
-    unfold D
+      -- Part 1: D.minDist ≤ C.minDist (Trivial subset property)
+      · apply subset_mindist;
+        exact Set.subset_insert c C.toSet
+      -- Part 2: D.minDist ≥ d_exact (Using the helper lemma)
+      · apply le_minDist_insert _ _ h_C_min_dist_exact h_outside_ball_dist
     rw[h_D_minDist]
     constructor
     · -- Goal 1: C ⊆ insert c C
