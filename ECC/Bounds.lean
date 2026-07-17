@@ -123,19 +123,14 @@ theorem gilbert_varshamov (hq : 2 ≤ q α) (hn : 1 ≤ n) {δ : ℝ}
   -- the packing radius r = d - 1 satisfies r ≤ δn, hence r/n ≤ δ < 1 - 1/q
   set r : ℕ := d - 1 with hr_def
   have hrδn : (r : ℝ) ≤ δ * n := by
-    rcases le_or_gt ⌈δ * n⌉₊ 1 with h | h
+    rcases Nat.eq_zero_or_pos ⌈δ * n⌉₊ with h | h
+    -- if ⌈δn⌉ = 0 then r = 0 and the claim is just 0 ≤ δn
     · have hr0 : r = 0 := by omega
-      rw [hr0]
-      simpa using mul_nonneg hδ0 hn0.le
-    · have hd_eq : d = ⌈δ * n⌉₊ := by omega
-      have h1 : 1 ≤ ⌈δ * n⌉₊ := by omega
-      have hceil : (⌈δ * n⌉₊ : ℝ) < δ * n + 1 :=
-        Nat.ceil_lt_add_one (mul_nonneg hδ0 hn0.le)
-      have hrcast : (r : ℝ) = (⌈δ * n⌉₊ : ℝ) - 1 := by
-        rw [hr_def, hd_eq]
-        push_cast [h1]
-        ring
-      linarith
+      rw [hr0, Nat.cast_zero]
+      exact mul_nonneg hδ0 hn0.le
+    -- otherwise r = ⌈δn⌉ - 1 < ⌈δn⌉, and being below the ceiling means (r : ℝ) < δn
+    · have hrlt : r < ⌈δ * n⌉₊ := by omega
+      exact (Nat.lt_ceil.mp hrlt).le
   have hrn_le_δ : (r : ℝ) / n ≤ δ := by
     rw [div_le_iff₀ hn0]
     exact hrδn
