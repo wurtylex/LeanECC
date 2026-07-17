@@ -305,9 +305,7 @@ lemma covers
       · apply subset_mindist;
         exact Set.subset_insert c C.toSet
       -- Part 2: D.minDist ≥ d_exact (Using the helper lemma)
-      · apply le_minDist_insert
-        rw [h_C_min_dist_exact]
-        exact h_outside_ball_dist
+      · apply le_minDist_insert _ _ h_C_min_dist_exact h_outside_ball_dist
     rw[h_D_minDist]
     constructor
     · -- Goal 1: C ⊆ insert c C
