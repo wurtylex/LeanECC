@@ -6,11 +6,9 @@ Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang)
 
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Set.Card.Arithmetic
-public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.InformationTheory.Hamming
 public import Mathlib.Data.ENat.Lattice
