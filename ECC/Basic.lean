@@ -190,7 +190,7 @@ lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
     -- Goal: `hammingDist x y ≤ r ∧ hammingDist x y = i ↔ hammingDist x y = i`.
     -- Since `i ≤ r`, the equality `hammingDist x y = i` already forces `hammingDist x y ≤ r`.
     have hir : i ≤ r := Nat.lt_succ_iff.mp hi
-    omega
+    exact and_iff_right_of_imp fun h => h.trans_le hir
   rw [hfib, ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card']
   exact ncard_hammingSphere α n x i
 
