@@ -16,7 +16,11 @@ lake build
 ```
 
 ## References
-TODO
+The primary reference for this project is:
+
+- Venkatesan Guruswami, Atri Rudra, and Madhu Sudan, *Essential Coding Theory*. [PDF](https://cse.buffalo.edu/faculty/atri/courses/coding-theory/book/web-coding-book.pdf)
+
+Unless stated otherwise, definitions and statements follow the conventions of that book.
 
 ## Project Layout
 TODO
