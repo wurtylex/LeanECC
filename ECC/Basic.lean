@@ -89,17 +89,31 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
+variable {α n} in
+/-- The set of coordinates on which `x` and `y` disagree.  Its cardinality is `hammingDist x y`. -/
+def disagree (x y : Fin n → α) : Finset (Fin n) := Finset.univ.filter fun j => x j ≠ y j
+
+variable {α n} in
+omit [Fintype α] in
+@[simp]
+lemma card_disagree (x y : Fin n → α) : (disagree x y).card = hammingDist x y := rfl
+
+variable {α n} in
+omit [Fintype α] in
+@[simp]
+lemma mem_disagree {x y : Fin n → α} {j : Fin n} : j ∈ disagree x y ↔ x j ≠ y j := by
+  simp [disagree]
+
 /-- Fiber cardinality: for a fixed set `S ⊆ [n]` of coordinates, the number of words `y` whose set
 of disagreement coordinates with `x` (that is, `{j | x j ≠ y j}`) is exactly `S` is `(q-1)^|S|`.
 Such a `y` may take any of `q-1` non-`x j` values on each `j ∈ S` and must equal `x` off `S`. -/
 lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
-    {y : Fin n → α | (Finset.univ.filter fun j => x j ≠ y j) = S}.ncard = (q α - 1) ^ S.card := by
+    {y : Fin n → α | disagree x y = S}.ncard = (q α - 1) ^ S.card := by
   -- Reduce the `ncard` of the fiber to a `Finset.card`.
   rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
   -- The fiber is exactly the words that equal `x` off `S` and differ from `x` on `S`,
   -- i.e. an element of `∏ j, (if j ∈ S then [q]∖{x j} else {x j})`.
-  have hset : (Finset.univ.filter fun y : Fin n → α =>
-      (Finset.univ.filter fun j => x j ≠ y j) = S)
+  have hset : (Finset.univ.filter fun y : Fin n → α => disagree x y = S)
       = Fintype.piFinset fun j => if j ∈ S then Finset.univ.erase (x j) else {x j} := by
     ext y
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fintype.mem_piFinset]
@@ -114,9 +128,9 @@ lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
       · rw [if_neg hj, Finset.mem_singleton]
         simp only [hj, iff_false, not_not]
         exact eq_comm
-    -- `supp y = S` unfolds to the same per-coordinate condition.
+    -- `disagree x y = S` unfolds to the same per-coordinate condition.
     rw [Finset.ext_iff]
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, key]
+    simp only [mem_disagree, key]
   -- Count the fiber: `∏ j, |if j ∈ S then [q]∖{x j} else {x j}| = (q-1)^|S|`.
   rw [hset, Fintype.card_piFinset]
   simp only [apply_ite Finset.card, Finset.card_erase_of_mem (Finset.mem_univ _),
@@ -130,10 +144,10 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
     {y : Fin n → α | hammingDist x y = i}.ncard = n.choose i * (q α - 1) ^ i := by
   -- Reduce the `ncard` of the sphere to a `Finset.card` of a filter of `univ`.
   rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
-  -- Partition the sphere by each word's set of disagreement coordinates
-  -- `supp y = {j | x j ≠ y j}`, a size-`i` subset of `[n]` (its size is `hammingDist x y`).
+  -- Partition the sphere by each word's disagreement set `disagree x y`,
+  -- a size-`i` subset of `[n]` (its size is `hammingDist x y`).
   have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y = i : Finset _) :
-      Set (Fin n → α)).MapsTo (fun y => Finset.univ.filter fun j => x j ≠ y j)
+      Set (Fin n → α)).MapsTo (fun y => disagree x y)
       ((Finset.univ : Finset (Fin n)).powersetCard i) := by
     intro y hy
     rw [Finset.mem_coe, Finset.mem_filter] at hy
@@ -149,7 +163,7 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
     -- On the disagreement fiber for `S` the distance filter `= |S|` is automatic,
     -- so the fiber coincides with the one counted by `ncard_disagreementFiber`.
     rw [Finset.filter_filter, Finset.filter_congr fun y _ =>
-      and_iff_right_of_imp fun h => by rw [hammingDist, h],
+      and_iff_right_of_imp fun h => by rw [← card_disagree, h],
       ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_disagreementFiber]
   · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
     rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
