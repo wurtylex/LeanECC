@@ -58,6 +58,24 @@ noncomputable def rate (C : Code α n) : ℝ := C.dim / n
 noncomputable def minDist (C : Code α n) : ℕ∞ :=
   ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
 
+omit [Fintype α] in
+/-- Elimination rule for `minDist`: it is a lower bound for the distance between any
+two distinct codewords. -/
+lemma minDist_le_hammingDist {C : Code α n} {c₁ c₂ : Fin n → α}
+    (h₁ : c₁ ∈ C) (h₂ : c₂ ∈ C) (hne : c₁ ≠ c₂) :
+    minDist α n C ≤ (hammingDist c₁ c₂ : ℕ∞) := by
+  unfold minDist
+  exact (iInf₂_le c₁ h₁).trans <| (iInf₂_le c₂ h₂).trans (iInf_le _ hne)
+
+omit [Fintype α] in
+/-- Introduction rule for `minDist`: it is the greatest lower bound for the distances
+between distinct codewords. -/
+lemma le_minDist {C : Code α n} {m : ℕ∞}
+    (h : ∀ c₁ ∈ C, ∀ c₂ ∈ C, c₁ ≠ c₂ → m ≤ (hammingDist c₁ c₂ : ℕ∞)) :
+    m ≤ minDist α n C := by
+  simp only [minDist, le_iInf_iff]
+  exact h
+
 /-- Relative minimum distiance is minimmum distnace / n -/
 noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
   (C.minDist : ℝ≥0∞) / (n : ℝ≥0∞)
@@ -65,8 +83,10 @@ noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
 omit [Fintype α] in
 /-- The minimum distance of any code is at least 1, since it is an infimum
 over pairs of distinct codewords (and the empty infimum is ⊤). -/
-lemma one_leq_minDist (C : Code α n) : 1 ≤ C.minDist := by
-  simp [minDist, Nat.one_le_iff_ne_zero]
+lemma one_leq_minDist (C : Code α n) : 1 ≤ C.minDist :=
+  le_minDist α n fun c₁ _ c₂ _ hne => by
+    have : hammingDist c₁ c₂ ≠ 0 := fun h => hne (by simpa using h)
+    exact_mod_cast Nat.one_le_iff_ne_zero.mpr this
 
 /-- The Hamming ball of radius `e` centered at `x`: all words within Hamming distance `e` of `x`. -/
 def hammingBall (x : Fin n → α) (e : ℕ) : Set (Fin n → α) :=

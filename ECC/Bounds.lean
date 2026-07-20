@@ -43,24 +43,16 @@ omit [Fintype α] in
 /-- The minimum distance of a two-element code is the Hamming distance between the
 two codewords. -/
 lemma minDist_pair {x y : Fin n → α} (hxy : x ≠ y) :
-    minDist α n ({x, y} : Set (Fin n → α)) = hammingDist x y := by
-  have hx : x ∈ ({x, y} : Set (Fin n → α)) := Set.mem_insert x {y}
-  have hy : y ∈ ({x, y} : Set (Fin n → α)) := Set.mem_insert_of_mem x rfl
-  apply le_antisymm
-  · unfold minDist
-    exact le_trans (iInf₂_le x hx) (le_trans (iInf₂_le y hy) (iInf_le _ hxy))
-  · unfold minDist
-    simp only [le_iInf_iff]
-    intro c₁ hc₁ c₂ hc₂ hne
-    -- each codeword is x or y, and they are distinct, so the pair is {x, y} in some order
-    have hc₁' : c₁ = x ∨ c₁ = y := hc₁
-    have hc₂' : c₂ = x ∨ c₂ = y := hc₂
-    rcases hc₁' with h₁ | h₁ <;> rcases hc₂' with h₂ | h₂ <;>
-      simp only [h₁, h₂] at hne ⊢ <;>
-      first
-        | exact absurd rfl hne
-        | exact le_refl _
-        | exact_mod_cast (hammingDist_comm x y).le
+    minDist α n ({x, y} : Set (Fin n → α)) = hammingDist x y :=
+  le_antisymm
+    (minDist_le_hammingDist α n (Set.mem_insert x {y}) (Set.mem_insert_of_mem x rfl) hxy)
+    (le_minDist α n <| by
+      -- each codeword is x or y, and they are distinct, so the pair is {x, y} in some order
+      rintro c₁ (rfl | rfl) c₂ (rfl | rfl) hne
+      · exact absurd rfl hne
+      · exact le_rfl
+      · exact_mod_cast (hammingDist_comm _ _).le
+      · exact absurd rfl hne)
 
 /-- Among the codes of minimum distance exactly d (a finite nonempty family, seeded by
 a pair of words at distance d) there is one that is maximal with respect to inclusion. -/
