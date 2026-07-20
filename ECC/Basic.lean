@@ -112,18 +112,18 @@ lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
   -- Reduce the `ncard` of the fiber to a `Finset.card`.
   rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
   -- The fiber is exactly the words that equal `x` off `S` and differ from `x` on `S`,
-  -- i.e. an element of `∏ j, (if j ∈ S then [q]∖{x j} else {x j})`.
+  -- i.e. an element of `∏ j, (if j ∈ S then α ∖ {x j} else {x j})`.
   have hset : (Finset.univ.filter fun y : Fin n → α => disagree x y = S)
-      = Fintype.piFinset fun j => if j ∈ S then Finset.univ.erase (x j) else {x j} := by
+      = Fintype.piFinset fun j => if j ∈ S then {x j}ᶜ else {x j} := by
     ext y
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fintype.mem_piFinset]
     -- Per-coordinate reading of membership in the pi-finset.
     have key : ∀ j : Fin n,
-        (y j ∈ if j ∈ S then Finset.univ.erase (x j) else {x j}) ↔ (x j ≠ y j ↔ j ∈ S) := by
+        (y j ∈ if j ∈ S then ({x j}ᶜ : Finset α) else {x j}) ↔ (x j ≠ y j ↔ j ∈ S) := by
       intro j
       by_cases hj : j ∈ S
-      · rw [if_pos hj, Finset.mem_erase]
-        simp only [Finset.mem_univ, and_true, hj, iff_true]
+      · rw [if_pos hj, Finset.mem_compl, Finset.mem_singleton]
+        simp only [hj, iff_true]
         exact ne_comm
       · rw [if_neg hj, Finset.mem_singleton]
         simp only [hj, iff_false, not_not]
@@ -131,10 +131,9 @@ lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
     -- `disagree x y = S` unfolds to the same per-coordinate condition.
     rw [Finset.ext_iff]
     simp only [mem_disagree, key]
-  -- Count the fiber: `∏ j, |if j ∈ S then [q]∖{x j} else {x j}| = (q-1)^|S|`.
+  -- Count the fiber: `∏ j, |if j ∈ S then α ∖ {x j} else {x j}| = (q-1)^|S|`.
   rw [hset, Fintype.card_piFinset]
-  simp only [apply_ite Finset.card, Finset.card_erase_of_mem (Finset.mem_univ _),
-    Finset.card_univ, Finset.card_singleton]
+  simp only [apply_ite Finset.card, Finset.card_compl, Finset.card_singleton]
   -- `q α` is by definition `Fintype.card α`.
   rw [Fintype.prod_ite_mem, Finset.prod_const, q]
 
