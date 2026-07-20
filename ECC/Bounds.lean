@@ -133,11 +133,7 @@ theorem gilbert_varshamov (hq : 2 ≤ q α) (hn : 1 ≤ n) {δ : ℝ}
     hammingVolume_le_pow_mul_entropy (q α) n r hq hn hrange
   -- the code is nonempty, so its cardinality is positive
   have hncard : (0 : ℝ) < (C.ncard : ℝ) := by
-    have hqn : 0 < (q α) ^ n := pow_pos (by omega) n
-    rcases Nat.eq_zero_or_pos C.ncard with h0 | h
-    · rw [h0, zero_mul] at hCcard
-      exact absurd (Nat.le_zero.mp hCcard) hqn.ne'
-    · exact_mod_cast h
+    exact_mod_cast ncard_pos_of_pow_le α n (by omega) hCcard
   -- packing bound in ℝ: q^n ≤ |C| · Vol_q(n, r)
   have hcardR : (q α : ℝ) ^ (n : ℝ) ≤ (C.ncard : ℝ) * (hammingVolume (q α) n r : ℝ) := by
     rw [Real.rpow_natCast]

@@ -274,6 +274,17 @@ lemma maxPacking (C : Code α n) (d : ℕ)
         rw [Finset.sum_const, smul_eq_mul, ← Set.ncard_eq_toFinset_card _ hC]
         rfl
 
+omit [DecidableEq α] in
+/-- A code obeying a packing bound `q^n ≤ |C| · V` has positive cardinality: for a
+nonempty alphabet the left-hand side is positive, so the right-hand side, and hence
+`|C|`, cannot vanish. -/
+lemma ncard_pos_of_pow_le (hq : 0 < q α) {C : Code α n} {V : ℕ}
+    (h : (q α) ^ n ≤ C.ncard * V) : 0 < C.ncard := by
+  rcases Nat.eq_zero_or_pos C.ncard with h0 | hpos
+  · rw [h0, zero_mul] at h
+    exact absurd (Nat.le_zero.mp h) (pow_pos hq n).ne'
+  · exact hpos
+
 end Code
 
 end -- close @[expose] public section
