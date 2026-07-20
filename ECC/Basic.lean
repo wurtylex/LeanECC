@@ -145,23 +145,12 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
   trans ∑ _S ∈ (Finset.univ : Finset (Fin n)).powersetCard i, (q α - 1) ^ i
   · apply Finset.sum_congr rfl
     intro S hS
-    rw [Finset.mem_powersetCard] at hS
-    obtain ⟨_, hScard⟩ := hS
-    -- On the disagreement fiber for `S` the distance filter `= i` is automatic (since `|S| = i`),
+    obtain ⟨-, rfl⟩ := Finset.mem_powersetCard.mp hS
+    -- On the disagreement fiber for `S` the distance filter `= |S|` is automatic,
     -- so the fiber coincides with the one counted by `ncard_disagreementFiber`.
-    rw [Finset.filter_filter]
-    have hcongr : (Finset.univ.filter fun y : Fin n → α =>
-        hammingDist x y = i ∧ (Finset.univ.filter fun j => x j ≠ y j) = S)
-        = Finset.univ.filter fun y : Fin n → α =>
-          (Finset.univ.filter fun j => x j ≠ y j) = S := by
-      apply Finset.filter_congr
-      intro y _
-      refine ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
-      calc hammingDist x y = (Finset.univ.filter fun j => x j ≠ y j).card := rfl
-        _ = S.card := by rw [h]
-        _ = i := hScard
-    rw [hcongr, ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card',
-      ncard_disagreementFiber, hScard]
+    rw [Finset.filter_filter, Finset.filter_congr fun y _ =>
+      and_iff_right_of_imp fun h => by rw [hammingDist, h],
+      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_disagreementFiber]
   · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
     rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
 
