@@ -121,8 +121,8 @@ lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
   rw [hset, Fintype.card_piFinset]
   simp only [apply_ite Finset.card, Finset.card_erase_of_mem (Finset.mem_univ _),
     Finset.card_univ, Finset.card_singleton]
-  rw [Fintype.prod_ite_mem, Finset.prod_const]
-  rfl
+  -- `q α` is by definition `Fintype.card α`.
+  rw [Fintype.prod_ite_mem, Finset.prod_const, q]
 
 /-- Sphere cardinality: the number of words at Hamming distance exactly `i` from `x`
 is `C(n,i)·(q-1)^i`. -/
