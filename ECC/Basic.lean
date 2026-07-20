@@ -169,8 +169,7 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
 lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
     (hammingBall α n x r).ncard = hammingVolume (q α) n r := by
   -- Reduce the `ncard` of the ball to a `Finset.card` of a filter of `univ`.
-  have hball : hammingBall α n x r = {y : Fin n → α | hammingDist x y ≤ r} := rfl
-  rw [hball, hammingVolume_def, Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  rw [hammingBall, hammingVolume_def, Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
   -- Partition the ball by each word's distance to `x`, which lands in `{0, …, r}`.
   have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y ≤ r : Finset _) :
       Set (Fin n → α)).MapsTo (fun y => hammingDist x y) (Finset.range (r + 1)) := by
