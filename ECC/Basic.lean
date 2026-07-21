@@ -355,21 +355,6 @@ lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDis
     _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
 
 omit [Fintype α] in
-/-- Any unequal pair of elements of C will have a hamming distance ≥ than C's minDist -/
-lemma minDist_le_any_pair {C : Code α n} {c1 : Fin n → α} {c2 : Fin n → α}
-    (h_c1_in_C : c1 ∈ C)
-    (h_c2_in_C : c2 ∈ C)
-    (h_neq : c1 ≠ c2) :
-    hammingDist c1 c2 ≥ C.minDist := by
-  exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
-    ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
-      iInf₂_le c1 h_c1_in_C
-    _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
-      iInf₂_le c2 h_c2_in_C
-    _ ≤ (hammingDist c1 c2 : ℕ∞) :=
-      iInf_le _ h_neq
-
-omit [Fintype α] in
 /-- Lower bounds the minimum distance of a code after inserting a new codeword. -/
 lemma le_minDist_insert {C : Code α n} {c : Fin n → α} {d_exact : ℕ∞}
     (h_minDist : C.minDist = d_exact)
@@ -388,7 +373,7 @@ lemma le_minDist_insert {C : Code α n} {c : Fin n → α} {d_exact : ℕ∞}
     · exact h_dist c1 h1
     · -- Both elements are in C
       rw [← h_minDist]
-      exact minDist_le_any_pair _ _ h1 h2 h_neq
+      exact minDist_le_hammingDist _ _ h1 h2 h_neq
 
 /-- Given a maximal wrt inclusion code C with distance ≤ d,
 the union of hamming balls with radius d-1 around each
