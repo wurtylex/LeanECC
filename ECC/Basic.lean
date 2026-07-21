@@ -6,11 +6,9 @@ Authors: Alex Chai, Erin Jaen, wurtylex (Anthony Chang)
 
 module
 
-public import Mathlib.Data.Set.Basic
-public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Set.Card.Arithmetic
-public import Mathlib.Data.Fintype.Basic
 public import Mathlib.Data.Fintype.Card
+public import Mathlib.Data.Fintype.Pi
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Mathlib.InformationTheory.Hamming
 public import Mathlib.Data.ENat.Lattice
@@ -89,9 +87,111 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
+variable {α n} in
+/-- The set of coordinates on which `x` and `y` disagree.  Its cardinality is `hammingDist x y`. -/
+def disagree (x y : Fin n → α) : Finset (Fin n) := Finset.univ.filter fun j => x j ≠ y j
+
+variable {α n} in
+omit [Fintype α] in
+@[simp]
+lemma card_disagree (x y : Fin n → α) : (disagree x y).card = hammingDist x y := rfl
+
+variable {α n} in
+omit [Fintype α] in
+@[simp]
+lemma mem_disagree {x y : Fin n → α} {j : Fin n} : j ∈ disagree x y ↔ x j ≠ y j := by
+  simp [disagree]
+
+/-- Fiber cardinality: for a fixed set `S ⊆ [n]` of coordinates, the number of words `y` whose set
+of disagreement coordinates with `x` (that is, `{j | x j ≠ y j}`) is exactly `S` is `(q-1)^|S|`.
+Such a `y` may take any of `q-1` non-`x j` values on each `j ∈ S` and must equal `x` off `S`. -/
+lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
+    {y : Fin n → α | disagree x y = S}.ncard = (q α - 1) ^ S.card := by
+  -- Reduce the `ncard` of the fiber to a `Finset.card`.
+  rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  -- The fiber is exactly the words that equal `x` off `S` and differ from `x` on `S`,
+  -- i.e. an element of `∏ j, (if j ∈ S then α ∖ {x j} else {x j})`.
+  have hset : (Finset.univ.filter fun y : Fin n → α => disagree x y = S)
+      = Fintype.piFinset fun j => if j ∈ S then {x j}ᶜ else {x j} := by
+    ext y
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Fintype.mem_piFinset]
+    -- Per-coordinate reading of membership in the pi-finset.
+    have key : ∀ j : Fin n,
+        (y j ∈ if j ∈ S then ({x j}ᶜ : Finset α) else {x j}) ↔ (x j ≠ y j ↔ j ∈ S) := by
+      intro j
+      by_cases hj : j ∈ S
+      · rw [if_pos hj, Finset.mem_compl, Finset.mem_singleton]
+        simp only [hj, iff_true]
+        exact ne_comm
+      · rw [if_neg hj, Finset.mem_singleton]
+        simp only [hj, iff_false, not_not]
+        exact eq_comm
+    -- `disagree x y = S` unfolds to the same per-coordinate condition.
+    rw [Finset.ext_iff]
+    simp only [mem_disagree, key]
+  -- Count the fiber: `∏ j, |if j ∈ S then α ∖ {x j} else {x j}| = (q-1)^|S|`.
+  rw [hset, Fintype.card_piFinset]
+  simp only [apply_ite Finset.card, Finset.card_compl, Finset.card_singleton]
+  -- `q α` is by definition `Fintype.card α`.
+  rw [Fintype.prod_ite_mem, Finset.prod_const, q]
+
+/-- Sphere cardinality: the number of words at Hamming distance exactly `i` from `x`
+is `C(n,i)·(q-1)^i`. -/
+lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
+    {y : Fin n → α | hammingDist x y = i}.ncard = n.choose i * (q α - 1) ^ i := by
+  -- Reduce the `ncard` of the sphere to a `Finset.card` of a filter of `univ`.
+  rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  -- Partition the sphere by each word's disagreement set `disagree x y`,
+  -- a size-`i` subset of `[n]` (its size is `hammingDist x y`).
+  have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y = i : Finset _) :
+      Set (Fin n → α)).MapsTo (fun y => disagree x y)
+      ((Finset.univ : Finset (Fin n)).powersetCard i) := by
+    intro y hy
+    rw [Finset.mem_coe, Finset.mem_filter] at hy
+    rw [Finset.mem_coe, Finset.mem_powersetCard]
+    exact ⟨Finset.filter_subset _ _, hy.2⟩
+  rw [Finset.card_eq_sum_card_fiberwise hmaps]
+  -- Each fiber (words with a fixed disagreement set `S`, `|S| = i`) has `(q-1)^i` elements,
+  -- and there are `C(n,i)` choices of `S`.
+  trans ∑ _S ∈ (Finset.univ : Finset (Fin n)).powersetCard i, (q α - 1) ^ i
+  · apply Finset.sum_congr rfl
+    intro S hS
+    obtain ⟨-, rfl⟩ := Finset.mem_powersetCard.mp hS
+    -- On the disagreement fiber for `S` the distance filter `= |S|` is automatic,
+    -- so the fiber coincides with the one counted by `ncard_disagreementFiber`.
+    rw [Finset.filter_filter, Finset.filter_congr fun y _ =>
+      and_iff_right_of_imp fun h => by rw [← card_disagree, h],
+      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_disagreementFiber]
+  · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
+    rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
+
 /-- A Hamming ball of radius r contains exactly V_q(n,r) words. -/
 lemma ncard_hammingBall (x : Fin n → α) (r : ℕ) :
-    (hammingBall α n x r).ncard = hammingVolume (q α) n r := by sorry
+    (hammingBall α n x r).ncard = hammingVolume (q α) n r := by
+  -- Reduce the `ncard` of the ball to a `Finset.card` of a filter of `univ`.
+  rw [hammingBall, hammingVolume_def, Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
+  -- Partition the ball by each word's distance to `x`, which lands in `{0, …, r}`.
+  have hmaps : ((Finset.univ.filter fun y : Fin n → α => hammingDist x y ≤ r : Finset _) :
+      Set (Fin n → α)).MapsTo (fun y => hammingDist x y) (Finset.range (r + 1)) := by
+    intro y hy
+    rw [Finset.mem_coe, Finset.mem_filter] at hy
+    rw [Finset.mem_coe, Finset.mem_range]
+    exact Nat.lt_succ_of_le hy.2
+  rw [Finset.card_eq_sum_card_fiberwise hmaps]
+  -- The fiber at distance `i ≤ r` is the sphere of radius `i`, counted by `ncard_hammingSphere`.
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [Finset.mem_range] at hi
+  have hfib : (Finset.univ.filter fun y : Fin n → α => hammingDist x y ≤ r).filter
+      (fun y => hammingDist x y = i) = Finset.univ.filter fun y => hammingDist x y = i := by
+    ext y
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    -- Goal: `hammingDist x y ≤ r ∧ hammingDist x y = i ↔ hammingDist x y = i`.
+    -- Since `i ≤ r`, the equality `hammingDist x y = i` already forces `hammingDist x y ≤ r`.
+    have hir : i ≤ r := Nat.lt_succ_iff.mp hi
+    exact and_iff_right_of_imp fun h => h.trans_le hir
+  rw [hfib, ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card']
+  exact ncard_hammingSphere α n x i
 
 /-- The volume entropy bound: Vol_q(n,r) ≤ q^(n·H_q(r/n)), where H_q is the q-ary
 entropy function (`Real.qaryEntropy q p / Real.log q` converts from nats to log base q). -/
