@@ -57,6 +57,7 @@ Then
 \begin{theorem}[Gilbert-Varshamov Bound; general codes]
 \label{thm:GVBgc}
 \uses{def:Code, def:q, def:rate, def:RelMinDim, lemma:MaximalPacking, lemma:VolEntropy}
+See~\cite{GRS}.
 Let $q \geq 2$ be an integer.
 For every $0 \leq \delta < 1 - \frac{1}{q}$ and every positive integer $n$, there exists a $q$-ary code of block length $n$ with rate $R \geq 1 - H_q(\delta)$ and relative distance at least $\delta$.
 \end{theorem}
@@ -90,6 +91,7 @@ For every $0 \leq \delta < 1 - \frac{1}{q}$ and every positive integer $n$, ther
 
 \begin{theorem}[Gilbert-Varshamov Bound; linear codes]
 \uses{def:Code, def:q, def:rate, def:MinDim, def:LinearCode, def:GeneratorMatrix}
+See~\cite{GRS}.
 Let $q$ be a prime power.
 For every $0 \leq \delta < 1 - \frac{1}{q}$, every $0 \leq \varepsilon \leq 1 - H_q(\delta)$, and every positive integer $n$, set $k = n\bigl(1 - H_q(\delta) - \varepsilon\bigr)$.
 If $G \in \mathbb{F}^{k \times n}_{q}$ is picked uniformly at random, then $G$ generates a code of rate $1 - H_q(\delta) - \varepsilon$ and relative distance at least $\delta$ with probability strictly greater than $1 - q^{-\varepsilon n}$.

@@ -69,7 +69,7 @@ lemma subspaceImpliesParityCheck {C : LinearCode F n} :
     ∃ H : Matrix (Fin m) (Fin n) F, (ParityCheckMatrix H = C) ∧ (Matrix.rank H = m) := by sorry
 
 /-- If H ∈ 𝔽^{(n-k) × n}_q is a matrix of rank n-k satisfying
-C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} then C is an [n,k]_q linear code-/
+C = {y ∈ 𝔽_q^n ∣ H · y^⊺ = 0} then C is an [n,k]_q linear code -/
 lemma parityCheckImpliesSubspace {m : ℕ} {H : Matrix (Fin m) (Fin n) F} :
     Matrix.rank H = m → ∃ C : LinearCode F n, (ParityCheckMatrix H = C) ∧ (dim C = n-m) := by sorry
 

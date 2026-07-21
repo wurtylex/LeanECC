@@ -29,12 +29,15 @@
 
 \begin{lemma}[Sphere cardinality]
   \label{lemma:SphereCard}
+  \lean{Code.ncard_hammingSphere}
+  \leanok
   \uses{def:q}
   For any $\mathbf{x} \in [q]^n$ and integer $i \geq 0$,
   \[\bigl|\{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}\bigr| = \binom{n}{i}(q-1)^i.\]
 \end{lemma}
 
 \begin{proof}
+  \leanok
   Write $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$ for the sphere,
   and for a word $\mathbf{y} \in [q]^n$ let
   \[
@@ -81,7 +84,7 @@
   \[
     |S_i| = |\mathcal{P}_i|
       = \sum_{\substack{T \subseteq [n] \\ |T| = i}} (q-1)^i
-      = \binom{n}{i}(q-1)^i. \qedhere
+      = \binom{n}{i}(q-1)^i.
   \]
 \end{proof}
 
@@ -95,6 +98,7 @@
 \end{lemma}
 
 \begin{proof}
+  \leanok
   \uses{lemma:SphereCard}
   For each integer $0 \leq i \leq r$ let $S_i = \{\mathbf{y} \in [q]^n \mid \Delta(\mathbf{x}, \mathbf{y}) = i\}$
   be the sphere of radius $i$ about $\mathbf{x}$.

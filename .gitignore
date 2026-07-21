@@ -22,6 +22,8 @@ blueprint/src/print.synctex.gz
 blueprint/src/print.pdf
 blueprint/src/*.fls
 blueprint/src/*.paux
+blueprint/src/*.bbl
+blueprint/src/*.blg
 
 # bluepritn test files
 blueprint/lean_decls
