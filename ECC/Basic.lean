@@ -81,7 +81,7 @@ noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
 omit [Fintype α] in
 /-- The minimum distance of any code is at least 1, since it is an infimum
 over pairs of distinct codewords (and the empty infimum is ⊤). -/
-lemma one_leq_minDist (C : Code α n) : 1 ≤ C.minDist :=
+lemma one_le_minDist (C : Code α n) : 1 ≤ C.minDist :=
   le_minDist α n fun c₁ _ c₂ _ hne => by
     have : hammingDist c₁ c₂ ≠ 0 := fun h => hne (by simpa using h)
     exact_mod_cast Nat.one_le_iff_ne_zero.mpr this
@@ -109,11 +109,7 @@ lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
 
 /-- The volume of a Hamming ball is positive, since the i = 0 term of the sum is 1. -/
 lemma hammingVolume_pos (q n r : ℕ) : 0 < hammingVolume q n r :=
-  Nat.lt_of_lt_of_le Nat.zero_lt_one <|
-    calc 1 = n.choose 0 * (q - 1) ^ 0 := by simp
-      _ ≤ ∑ i ∈ Finset.range (r + 1), n.choose i * (q - 1) ^ i :=
-        Finset.single_le_sum (f := fun i => n.choose i * (q - 1) ^ i)
-          (fun i _ => Nat.zero_le _) (Finset.mem_range.mpr r.succ_pos)
+  Finset.sum_pos' (fun _ _ => Nat.zero_le _) ⟨0, Finset.mem_range.mpr r.succ_pos, by simp⟩
 
 variable {α n} in
 /-- The set of coordinates on which `x` and `y` disagree.  Its cardinality is `hammingDist x y`. -/
@@ -133,7 +129,7 @@ lemma mem_disagree {x y : Fin n → α} {j : Fin n} : j ∈ disagree x y ↔ x j
 /-- Fiber cardinality: for a fixed set `S ⊆ [n]` of coordinates, the number of words `y` whose set
 of disagreement coordinates with `x` (that is, `{j | x j ≠ y j}`) is exactly `S` is `(q-1)^|S|`.
 Such a `y` may take any of `q-1` non-`x j` values on each `j ∈ S` and must equal `x` off `S`. -/
-lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
+lemma ncard_setOf_disagree_eq (x : Fin n → α) (S : Finset (Fin n)) :
     {y : Fin n → α | disagree x y = S}.ncard = (q α - 1) ^ S.card := by
   -- Reduce the `ncard` of the fiber to a `Finset.card`.
   rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
@@ -186,10 +182,10 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
     intro S hS
     obtain ⟨-, rfl⟩ := Finset.mem_powersetCard.mp hS
     -- On the disagreement fiber for `S` the distance filter `= |S|` is automatic,
-    -- so the fiber coincides with the one counted by `ncard_disagreementFiber`.
+    -- so the fiber coincides with the one counted by `ncard_setOf_disagree_eq`.
     rw [Finset.filter_filter, Finset.filter_congr fun y _ =>
       and_iff_right_of_imp fun h => by rw [← card_disagree, h],
-      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_disagreementFiber]
+      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_setOf_disagree_eq]
   · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
     rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
 
@@ -462,17 +458,6 @@ lemma maxPacking (C : Code α n) (d : ℕ)
     _ = C.ncard * hammingVolume (q α) n (d - 1) := by
         rw [Finset.sum_const, smul_eq_mul, ← Set.ncard_eq_toFinset_card _ hC]
         rfl
-
-omit [DecidableEq α] in
-/-- A code obeying a packing bound `q^n ≤ |C| · V` has positive cardinality: for a
-nonempty alphabet the left-hand side is positive, so the right-hand side, and hence
-`|C|`, cannot vanish. -/
-lemma ncard_pos_of_pow_le (hq : 0 < q α) {C : Code α n} {V : ℕ}
-    (h : (q α) ^ n ≤ C.ncard * V) : 0 < C.ncard := by
-  rcases Nat.eq_zero_or_pos C.ncard with h0 | hpos
-  · rw [h0, zero_mul] at h
-    exact absurd (Nat.le_zero.mp h) (pow_pos hq n).ne'
-  · exact hpos
 
 end Code
 

@@ -31,13 +31,15 @@ lemma exists_pair_hammingDist_eq (hq : 2 ≤ q α) {d : ℕ} (hdn : d ≤ n) :
   obtain ⟨a, b, hab⟩ : ∃ a b : α, a ≠ b :=
     Fintype.exists_pair_of_one_lt_card (Nat.lt_of_lt_of_le one_lt_two hq)
   refine ⟨fun _ => a, fun i => if (i : ℕ) < d then b else a, ?_⟩
-  rw [show hammingDist (fun _ => a) (fun i : Fin n => if (i : ℕ) < d then b else a)
-      = (Finset.univ.filter fun i : Fin n => a ≠ if (i : ℕ) < d then b else a).card from rfl]
-  rw [show (Finset.univ.filter fun i : Fin n => a ≠ if (i : ℕ) < d then b else a)
-      = (Finset.range d).attachFin (fun m hm => (Finset.mem_range.mp hm).trans_le hdn) by
+  -- the disagreement set is `{i : Fin n | i < d}`, which is `Finset.range d` re-indexed
+  have hfilter : (Finset.univ.filter fun i : Fin n => a ≠ if (i : ℕ) < d then b else a)
+      = (Finset.range d).attachFin fun m hm => (Finset.mem_range.mp hm).trans_le hdn := by
     ext i
-    by_cases hi : (i : ℕ) < d <;> simp [hi, hab, Finset.mem_attachFin]]
-  rw [Finset.card_attachFin, Finset.card_range]
+    by_cases hi : (i : ℕ) < d <;> simp [hi, hab, Finset.mem_attachFin]
+  calc hammingDist (fun _ => a) (fun i : Fin n => if (i : ℕ) < d then b else a)
+      = (Finset.univ.filter fun i : Fin n => a ≠ if (i : ℕ) < d then b else a).card := rfl
+    _ = ((Finset.range d).attachFin _).card := by rw [hfilter]
+    _ = d := by rw [Finset.card_attachFin, Finset.card_range]
 
 omit [Fintype α] in
 /-- The minimum distance of a two-element code is the Hamming distance between the
@@ -64,7 +66,7 @@ lemma exists_maximal_code (hq : 2 ≤ q α) {d : ℕ} (hd : 1 ≤ d) (hdn : d �
     rw [hammingDist_self] at hxy
     omega
   -- the family of codes of minimum distance exactly d, as a set of sets
-  set F : Set (Set (Fin n → α)) := {D | minDist α n D = (d : ℕ∞)} with hF
+  set F : Set (Set (Fin n → α)) := {D | minDist α n D = (d : ℕ∞)}
   have hne : ({x, y} : Set (Fin n → α)) ∈ F := by
     change minDist α n ({x, y} : Set (Fin n → α)) = (d : ℕ∞)
     rw [minDist_pair α n hxy', hxy]
@@ -85,6 +87,14 @@ theorem gilbert_varshamov_card (hq : 2 ≤ q α) {d : ℕ} (hd : 1 ≤ d) (hdn :
       (q α) ^ n ≤ C.ncard * hammingVolume (q α) n (d - 1) := by
   obtain ⟨C, hmax, hdist⟩ := exists_maximal_code α n hq hd hdn
   exact ⟨C, hdist, maxPacking α n C d hmax hdist.le⟩
+
+omit [DecidableEq α] in
+/-- A code obeying a packing bound `q^n ≤ |C| · V` has positive cardinality: for a
+nonempty alphabet the left-hand side is positive, so the right-hand side, and hence
+`|C|`, cannot vanish. -/
+lemma ncard_pos_of_pow_le (hq : 0 < q α) {C : Code α n} {V : ℕ}
+    (h : (q α) ^ n ≤ C.ncard * V) : 0 < C.ncard :=
+  Nat.pos_of_ne_zero fun h0 => (pow_pos hq n).ne' (Nat.le_zero.mp (by simpa [h0] using h))
 
 /-- Gilbert–Varshamov bound (general codes): for 2 ≤ q, 0 ≤ δ < 1 - 1/q and
 block length n ≥ 1 there is a q-ary code of rate at least 1 - H_q(δ) and relative
