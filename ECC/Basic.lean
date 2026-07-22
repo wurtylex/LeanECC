@@ -56,6 +56,24 @@ noncomputable def rate (C : Code α n) : ℝ := C.dim / n
 noncomputable def minDist (C : Code α n) : ℕ∞ :=
   ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
 
+omit [Fintype α] in
+/-- Elimination rule for `minDist`: it is a lower bound for the distance between any
+two distinct codewords. -/
+lemma minDist_le_hammingDist {C : Code α n} {c₁ c₂ : Fin n → α}
+    (h₁ : c₁ ∈ C) (h₂ : c₂ ∈ C) (hne : c₁ ≠ c₂) :
+    minDist α n C ≤ (hammingDist c₁ c₂ : ℕ∞) := by
+  unfold minDist
+  exact (iInf₂_le c₁ h₁).trans <| (iInf₂_le c₂ h₂).trans (iInf_le _ hne)
+
+omit [Fintype α] in
+/-- Introduction rule for `minDist`: it is the greatest lower bound for the distances
+between distinct codewords. -/
+lemma le_minDist {C : Code α n} {m : ℕ∞}
+    (h : ∀ c₁ ∈ C, ∀ c₂ ∈ C, c₁ ≠ c₂ → m ≤ (hammingDist c₁ c₂ : ℕ∞)) :
+    m ≤ minDist α n C := by
+  simp only [minDist, le_iInf_iff]
+  exact h
+
 /-- Relative minimum distiance is minimmum distnace / n -/
 noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
   (C.minDist : ℝ≥0∞) / (n : ℝ≥0∞)
@@ -63,8 +81,10 @@ noncomputable def relMinDist (C : Code α n) : ℝ≥0∞ :=
 omit [Fintype α] in
 /-- The minimum distance of any code is at least 1, since it is an infimum
 over pairs of distinct codewords (and the empty infimum is ⊤). -/
-lemma one_leq_minDist (C : Code α n) : 1 ≤ C.minDist := by
-  simp [minDist, Nat.one_le_iff_ne_zero]
+lemma one_le_minDist (C : Code α n) : 1 ≤ C.minDist :=
+  le_minDist α n fun c₁ _ c₂ _ hne => by
+    have : hammingDist c₁ c₂ ≠ 0 := fun h => hne (by simpa using h)
+    exact_mod_cast Nat.one_le_iff_ne_zero.mpr this
 
 /-- The Hamming ball of radius `e` centered at `x`: all words within Hamming distance `e` of `x`. -/
 def hammingBall (x : Fin n → α) (e : ℕ) : Set (Fin n → α) :=
@@ -87,6 +107,10 @@ lemma hammingVolume_def (q n r : ℕ) :
 lemma hammingVolume_zero_radius (q n : ℕ) : hammingVolume q n 0 = 1 := by
   simp [hammingVolume]
 
+/-- The volume of a Hamming ball is positive, since the i = 0 term of the sum is 1. -/
+lemma hammingVolume_pos (q n r : ℕ) : 0 < hammingVolume q n r :=
+  Finset.sum_pos' (fun _ _ => Nat.zero_le _) ⟨0, Finset.mem_range.mpr r.succ_pos, by simp⟩
+
 variable {α n} in
 /-- The set of coordinates on which `x` and `y` disagree.  Its cardinality is `hammingDist x y`. -/
 def disagree (x y : Fin n → α) : Finset (Fin n) := Finset.univ.filter fun j => x j ≠ y j
@@ -105,7 +129,7 @@ lemma mem_disagree {x y : Fin n → α} {j : Fin n} : j ∈ disagree x y ↔ x j
 /-- Fiber cardinality: for a fixed set `S ⊆ [n]` of coordinates, the number of words `y` whose set
 of disagreement coordinates with `x` (that is, `{j | x j ≠ y j}`) is exactly `S` is `(q-1)^|S|`.
 Such a `y` may take any of `q-1` non-`x j` values on each `j ∈ S` and must equal `x` off `S`. -/
-lemma ncard_disagreementFiber (x : Fin n → α) (S : Finset (Fin n)) :
+lemma ncard_setOf_disagree_eq (x : Fin n → α) (S : Finset (Fin n)) :
     {y : Fin n → α | disagree x y = S}.ncard = (q α - 1) ^ S.card := by
   -- Reduce the `ncard` of the fiber to a `Finset.card`.
   rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf]
@@ -158,10 +182,10 @@ lemma ncard_hammingSphere (x : Fin n → α) (i : ℕ) :
     intro S hS
     obtain ⟨-, rfl⟩ := Finset.mem_powersetCard.mp hS
     -- On the disagreement fiber for `S` the distance filter `= |S|` is automatic,
-    -- so the fiber coincides with the one counted by `ncard_disagreementFiber`.
+    -- so the fiber coincides with the one counted by `ncard_setOf_disagree_eq`.
     rw [Finset.filter_filter, Finset.filter_congr fun y _ =>
       and_iff_right_of_imp fun h => by rw [← card_disagree, h],
-      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_disagreementFiber]
+      ← Set.toFinset_setOf, ← Set.ncard_eq_toFinset_card', ncard_setOf_disagree_eq]
   · -- Sum the constant `(q-1)^i` over the `C(n,i)` disagreement sets.
     rw [Finset.sum_const, Finset.card_powersetCard, Finset.card_fin, smul_eq_mul]
 
@@ -327,21 +351,6 @@ lemma subset_mindist {C D : Code α n} (hsub : C ⊆ D) : D.minDist ≤ C.minDis
     _ ≤ (hammingDist c₁ c₂ : ℕ∞) := iInf_le _ hne
 
 omit [Fintype α] in
-/-- Any unequal pair of elements of C will have a hamming distance ≥ than C's minDist -/
-lemma minDist_le_any_pair {C : Code α n} {c1 : Fin n → α} {c2 : Fin n → α}
-    (h_c1_in_C : c1 ∈ C)
-    (h_c2_in_C : c2 ∈ C)
-    (h_neq : c1 ≠ c2) :
-    hammingDist c1 c2 ≥ C.minDist := by
-  exact calc ⨅ c₁ ∈ C, ⨅ c₂ ∈ C, ⨅ _ : c₁ ≠ c₂, (hammingDist c₁ c₂ : ℕ∞)
-    ≤ ⨅ c₂ ∈ C, ⨅ _ : c1 ≠ c₂, (hammingDist c1 c₂ : ℕ∞) :=
-      iInf₂_le c1 h_c1_in_C
-    _ ≤ ⨅ _ : c1 ≠ c2, (hammingDist c1 c2 : ℕ∞) :=
-      iInf₂_le c2 h_c2_in_C
-    _ ≤ (hammingDist c1 c2 : ℕ∞) :=
-      iInf_le _ h_neq
-
-omit [Fintype α] in
 /-- Lower bounds the minimum distance of a code after inserting a new codeword. -/
 lemma le_minDist_insert {C : Code α n} {c : Fin n → α} {d_exact : ℕ∞}
     (h_minDist : C.minDist = d_exact)
@@ -360,7 +369,7 @@ lemma le_minDist_insert {C : Code α n} {c : Fin n → α} {d_exact : ℕ∞}
     · exact h_dist c1 h1
     · -- Both elements are in C
       rw [← h_minDist]
-      exact minDist_le_any_pair _ _ h1 h2 h_neq
+      exact minDist_le_hammingDist _ _ h1 h2 h_neq
 
 /-- Given a maximal wrt inclusion code C with distance ≤ d,
 the union of hamming balls with radius d-1 around each
@@ -449,6 +458,7 @@ lemma maxPacking (C : Code α n) (d : ℕ)
     _ = C.ncard * hammingVolume (q α) n (d - 1) := by
         rw [Finset.sum_const, smul_eq_mul, ← Set.ncard_eq_toFinset_card _ hC]
         rfl
+
 end Code
 
 end -- close @[expose] public section

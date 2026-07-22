@@ -56,6 +56,8 @@ Then
 
 \begin{theorem}[Gilbert-Varshamov Bound; general codes]
 \label{thm:GVBgc}
+\lean{Code.gilbert_varshamov}
+\leanok
 \uses{def:Code, def:q, def:rate, def:RelMinDim, lemma:MaximalPacking, lemma:VolEntropy}
 See~\cite{GRS}.
 Let $q \geq 2$ be an integer.
@@ -63,6 +65,7 @@ For every $0 \leq \delta < 1 - \frac{1}{q}$ and every positive integer $n$, ther
 \end{theorem}
 
 \begin{proof}
+    \leanok
     Fix $\delta$ with $0 \leq \delta < 1 - \frac{1}{q}$ and a positive integer $n$, and put
     \[
       d = \max(\lceil \delta n \rceil, 1).
